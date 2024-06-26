@@ -41,32 +41,29 @@ A basic example can be found in `basic.py`, it includes a basic OpenGL example o
 
 ## a very simple example
 ```c
-import RGFW
-from OpenGL.GL import *
+package main
 
-icon = [0xFF, 0x00, 0x00, 0xFF,    0xFF, 0x00, 0x00, 0xFF,     0xFF, 0x00, 0x00, 0xFF,   0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0x00, 0xFF,     0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF]
+import "core:fmt"
+import "RGFW"
+import gl "vendor:OpenGL"
 
-def main():
-    win = RGFW.createWindow("name", RGFW.rect(500, 500, 500, 500), RGFW.CENTER)
+main :: proc() {
+	window := RGFW.createWindow("window", {200, 200, 200, 200}, RGFW.CENTER);
+	RGFW.window_makeCurrent(window);
 
-    win.setIcon(icon, RGFW.area(3, 3), 4)
+	for !RGFW.window_shouldClose(window) {
+		RGFW.window_checkEvent(window);
 
-    running = 1
 
-    while (running):
-        while (win.checkEvent()):
-            if (win.event.type == RGFW.quit or RGFW.isPressedI(win, RGFW.Escape)):
-                running = 0
-                break
+		gl.Clear(gl.COLOR_BUFFER_BIT)
+		gl.ClearColor(0, 0, 0, 1.0)
+		
+		RGFW.window_swapBuffers(window);
+	}
 
-        win.swapBuffers()
 
-        glClearColor(0xFF, 0XFF, 0xFF, 0xFF)
-        glClear(GL_COLOR_BUFFER_BIT)
-
-    win.close()
-
-main()
+	RGFW.window_close(window);
+}
 ```
 
 # Contacts
