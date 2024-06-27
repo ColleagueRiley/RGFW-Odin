@@ -70,9 +70,8 @@ jobs:
         
     - name: Generate Artifacts
       run: |
-        copy /Y .\RGFW\RGFW.h .\build\${{ env.RELEASE_NAME }}\include
-        copy /Y .\RGFW\libRGFW.dll .\build\${{ env.RELEASE_NAME }}\lib
-        copy /Y .\RGFW\RGFW.odin .\build\${{ env.RELEASE_NAME }}\lib
+        xcopy .\RGFW .\build\${{ env.RELEASE_NAME }}\ /E /I /Y
+        xcopy .\RGFW-buffer .\build\${{ env.RELEASE_NAME }}\ /E /I /Y
         copy /Y .\README.md .\build\${{ env.RELEASE_NAME }}\README.md
         cd build
         7z a ./${{ env.RELEASE_NAME }}.zip ./${{ env.RELEASE_NAME }}

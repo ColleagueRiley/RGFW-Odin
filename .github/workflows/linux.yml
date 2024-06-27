@@ -56,8 +56,6 @@ jobs:
         cd build
         mkdir ${{ env.RELEASE_NAME }}
         cd ${{ env.RELEASE_NAME }}
-        mkdir include
-        mkdir lib
         cd ../../../RGFW-Odin
         # ${{ matrix.ARCH }}-linux-gnu-gcc -v
 
@@ -68,9 +66,8 @@ jobs:
     
     - name: Generate Artifacts
       run: |
-        cp -v ./RGFW/RGFW.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./RGFW/RGFW.odin ./build/${{ env.RELEASE_NAME }}/lib
-        cp -v ./RGFW/libRGFW.so ./build/${{ env.RELEASE_NAME }}/lib
+        cp -v -r ./RGFW/ ./build/${{ env.RELEASE_NAME }}/
+        cp -v -r ./RGFW-buffer/ ./build/${{ env.RELEASE_NAME }}/
         cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.md
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
