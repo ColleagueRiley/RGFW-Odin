@@ -63,7 +63,8 @@ jobs:
 
     - name: Build Library
       run: |
-        make
+        make Odin/odin
+        make ODIN=Odin/odin
       if: matrix.bits == 64
     
     - name: Generate Artifacts
