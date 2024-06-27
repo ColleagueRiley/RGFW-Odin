@@ -61,7 +61,7 @@ jobs:
         windres.exe --version
         dir C:\msys64\mingw64\bin
         make Odin/odin
-        make ODIN=Odin/odin
+        make ODIN=./Odin/odin.exe
       shell: cmd
       if: |
         matrix.compiler == 'mingw-w64' &&
