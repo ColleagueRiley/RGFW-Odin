@@ -69,7 +69,9 @@ jobs:
         rm -f ./build/lib/*
         lipo -create -output RGFW/libRGFW.dylib /tmp/libRGFW_x86_64.dylib /tmp/libRGFW_arm64.dylib
         ln -sv RGFW/libRGFW.dylib  build/${{ env.RELEASE_NAME }}/lib/libRGFW.dylib
-  
+
+        make
+        
     - name: Generate Artifacts
       run: |
         cp -v ./RGFW/RGFW.h ./build/${{ env.RELEASE_NAME }}/include
