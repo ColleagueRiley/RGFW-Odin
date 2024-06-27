@@ -4,7 +4,7 @@
 ## Build statuses
 ![workflow](https://github.com/ColleagueRiley/RGFW-Odin/actions/workflows/linux.yml/badge.svg)
 ![workflow windows](https://github.com/ColleagueRiley/RGFW-Odin/actions/workflows/windows.yml/badge.svg)
-![workflow windows](https://github.com/ColleagueRiley/RGFW-Odin/actions/workflows/macos.yml/badge.svg)
+![workflow windows](https://github.com/ColleagueRiley/RGFW-Odin/actions/workflows/macOS.yml/badge.svg)
 
 # About
 Odin bindings for RGFW, 
