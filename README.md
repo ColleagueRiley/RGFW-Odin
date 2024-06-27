@@ -30,7 +30,7 @@ This library does not
 
 ## building
 To build the Odin binding simple run
-`make build`
+`make build-RGFW`
 you can also run `make` to build and then run an example program or `make debug` to build from scratch then run an example program.
 
 # examples
@@ -67,6 +67,10 @@ main :: proc() {
 	RGFW.window_close(window);
 }
 ```
+
+This can be compiled with
+
+`odin run [file].odin -file`
 
 # Contacts
 - email : ColleagueRiley@gmail.com 
