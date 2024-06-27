@@ -51,8 +51,6 @@ jobs:
         cd build
         mkdir ${{ env.RELEASE_NAME }}
         cd ${{ env.RELEASE_NAME }}
-        mkdir include
-        mkdir lib
         cd ../../../RGFW-Odin
 
     - name: Build Library (MinGW-w64 64bit)

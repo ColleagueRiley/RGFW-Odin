@@ -92,8 +92,8 @@ jobs:
 
     - name: Generate Artifacts
       run: |
-        cp -v ./RGFW/* ./build/${{ env.RELEASE_NAME }}/RGFW
-        cp -v ./RGFW-buffer/* ./build/${{ env.RELEASE_NAME }}/RGFW-buffer
+        cp -v -r ./RGFW/ ./build/${{ env.RELEASE_NAME }}/
+        cp -v -r ./RGFW-buffer/ ./build/${{ env.RELEASE_NAME }}/
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         
