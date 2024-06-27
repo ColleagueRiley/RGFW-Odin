@@ -6,6 +6,9 @@ when (ODIN_OS == .Linux || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD) do foreig
 
 import _c "core:c"
 
+MAX_PATH :: 260 /* max length of a path (for dnd) */
+MAX_DROPS :: 260 /* max items you can drop at once */
+
 /*! Optional arguments for making a windows */
 TRANSPARENT_WINDOW ::	(1<<9) /*!< the window is transparent */
 NO_BORDER	 :: (1<<3) /*!< the window doesn't have border */
@@ -119,7 +122,7 @@ area :: struct {
 }
 
 monitor :: struct {
-    name : cstring,  /* monitor name */
+    name : [128]i8,  /* monitor name */
     rect : rect, /* monitor Workarea */
     scaleX : f32,
     scaleY : f32, /* monitor content scale*/
@@ -127,16 +130,127 @@ monitor :: struct {
     physH : f32
 }
 
+Key :: enum u32 {
+    KEY_NULL = 0,
+    Escape,
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
+    F11,
+    F12,
+
+    Backtick,
+
+    KEY_0,
+    KEY_1,
+    KEY_2,
+    KEY_3,
+    KEY_4,
+    KEY_5,
+    KEY_6,
+    KEY_7,
+    KEY_8,
+    KEY_9,
+
+    Minus,
+    Equals,
+    BackSpace,
+    Tab,
+    CapsLock,
+    ShiftL,
+    ControlL,
+    AltL,
+    SuperL,
+    ShiftR,
+    ControlR,
+    AltR,
+    SuperR,
+    Space,
+
+    a,
+    b,
+    c,
+    d,
+    e,
+    f,
+    g,
+    h,
+    i,
+    j,
+    k,
+    l,
+    m,
+    n,
+    o,
+    p,
+    q,
+    r,
+    s,
+    t,
+    u,
+    v,
+    w,
+    x,
+    y,
+    z,
+
+    Period,
+    Comma,
+    Slash,
+    Bracket,
+    CloseBracket,
+    Semicolon,
+    Return,
+    Quote,
+    BackSlash,
+
+    Up,
+    Down,
+    Left,
+    Right,
+
+    Delete,
+    Insert,
+    End,
+    Home,
+    PageUp,
+    PageDown,
+
+    Numlock,
+    KP_Slash,
+    Multiply,
+    KP_Minus,
+    KP_1,
+    KP_2,
+    KP_3,
+    KP_4,
+    KP_5,
+    KP_6,
+    KP_7,
+    KP_8,
+    KP_9,
+    KP_0,
+    KP_Period,
+    KP_Return
+};
+
 Event :: struct {
     keyName : cstring, /*!< key name of event */
     /*! drag and drop data */
     /* 260 max paths with a max length of 260 */
-    droppedFiles : [260]cstring,
+    droppedFiles : [MAX_DROPS][MAX_PATH]i8,
     droppedFilesCount : u32, /*!< house many files were dropped */
 
     type : u32, /*!< which event has been sent?*/
     point : vector, /*!< mouse x, y of event (or drop point) */
-    keyCode : u32,  /*!< keycode of event 	!!Keycodes defined at the bottom of the header file!! */
+    keyCode : Key,  /*!< keycode of event 	!!Keycodes defined at the bottom of the header file!! */
 
     fps : u32, /*the current fps of the window [the fps is checked when events are checked]*/
     frameTime : u64, 
@@ -168,129 +282,18 @@ window ::  struct {
     /*[the fps is capped when events are checked]*/
 }; /*!< Window structure for managing the window */
 
-RGFW_Key :: enum{
-    RGFW_KEY_NULL = 0,
-    RGFW_Escape,
-    RGFW_F1,
-    RGFW_F2,
-    RGFW_F3,
-    RGFW_F4,
-    RGFW_F5,
-    RGFW_F6,
-    RGFW_F7,
-    RGFW_F8,
-    RGFW_F9,
-    RGFW_F10,
-    RGFW_F11,
-    RGFW_F12,
-
-    RGFW_Backtick,
-
-    RGFW_0,
-    RGFW_1,
-    RGFW_2,
-    RGFW_3,
-    RGFW_4,
-    RGFW_5,
-    RGFW_6,
-    RGFW_7,
-    RGFW_8,
-    RGFW_9,
-
-    RGFW_Minus,
-    RGFW_Equals,
-    RGFW_BackSpace,
-    RGFW_Tab,
-    RGFW_CapsLock,
-    RGFW_ShiftL,
-    RGFW_ControlL,
-    RGFW_AltL,
-    RGFW_SuperL,
-    RGFW_ShiftR,
-    RGFW_ControlR,
-    RGFW_AltR,
-    RGFW_SuperR,
-    RGFW_Space,
-
-    RGFW_a,
-    RGFW_b,
-    RGFW_c,
-    RGFW_d,
-    RGFW_e,
-    RGFW_f,
-    RGFW_g,
-    RGFW_h,
-    RGFW_i,
-    RGFW_j,
-    RGFW_k,
-    RGFW_l,
-    RGFW_m,
-    RGFW_n,
-    RGFW_o,
-    RGFW_p,
-    RGFW_q,
-    RGFW_r,
-    RGFW_s,
-    RGFW_t,
-    RGFW_u,
-    RGFW_v,
-    RGFW_w,
-    RGFW_x,
-    RGFW_y,
-    RGFW_z,
-
-    RGFW_Period,
-    RGFW_Comma,
-    RGFW_Slash,
-    RGFW_Bracket,
-    RGFW_CloseBracket,
-    RGFW_Semicolon,
-    RGFW_Return,
-    RGFW_Quote,
-    RGFW_BackSlash,
-
-    RGFW_Up,
-    RGFW_Down,
-    RGFW_Left,
-    RGFW_Right,
-
-    RGFW_Delete,
-    RGFW_Insert,
-    RGFW_End,
-    RGFW_Home,
-    RGFW_PageUp,
-    RGFW_PageDown,
-
-    RGFW_Numlock,
-    RGFW_KP_Slash,
-    RGFW_Multiply,
-    RGFW_KP_Minus,
-    RGFW_KP_1,
-    RGFW_KP_2,
-    RGFW_KP_3,
-    RGFW_KP_4,
-    RGFW_KP_5,
-    RGFW_KP_6,
-    RGFW_KP_7,
-    RGFW_KP_8,
-    RGFW_KP_9,
-    RGFW_KP_0,
-    RGFW_KP_Period,
-    RGFW_KP_Return
-};
-
-RGFW_mouseIcons :: enum  {
-    RGFW_MOUSE_NORMAL = 0,
-    RGFW_MOUSE_ARROW,
-    RGFW_MOUSE_IBEAM,
-    RGFW_MOUSE_CROSSHAIR,
-    RGFW_MOUSE_POINTING_HAND,
-    RGFW_MOUSE_RESIZE_EW,
-    RGFW_MOUSE_RESIZE_NS,
-    RGFW_MOUSE_RESIZE_NWSE,
-    RGFW_MOUSE_RESIZE_NESW,
-    RGFW_MOUSE_RESIZE_ALL,
-    RGFW_MOUSE_NOT_ALLOWED,
+mouseIcons :: enum u32  {
+    MOUSE_NORMAL = 0,
+    MOUSE_ARROW,
+    MOUSE_IBEAM,
+    MOUSE_CROSSHAIR,
+    MOUSE_POINTING_HAND,
+    MOUSE_RESIZE_EW,
+    MOUSE_RESIZE_NS,
+    MOUSE_RESIZE_NWSE,
+    MOUSE_RESIZE_NESW,
+    MOUSE_RESIZE_ALL,
+    MOUSE_NOT_ALLOWED,
 };
 
 // Thread type definition
@@ -301,218 +304,78 @@ else {
     thread :: rawptr
 }
 
+@(default_calling_convention="c", link_prefix="RGFW_")
 foreign native {   
-    @(link_name="RGFW_createWindow")
     createWindow :: proc(string: cstring, rect: rect, args: u16) -> ^window ---
-    
-    @(link_name="RGFW_window_close")
     window_close :: proc(window: ^window) ---
-
-    @(link_name="RGFW_window_checkEvent")
-    window_checkEvent :: proc(window: ^window) -> ^Event ---
-    
-    @(link_name="RGFW_getMonitors")
+    window_checkEvent ::  proc "c" (window: ^window) -> ^Event ---
     getMonitors :: proc() -> [6]monitor ---
-    
-    @(link_name="RGFW_getPrimaryMonitor")
     getPrimaryMonitor :: proc() -> monitor ---
-    
-    @(link_name="RGFW_getScreenSize")
     getScreenSize :: proc() -> area ---
-    
-    @(link_name="RGFW_window_move")
     window_move :: proc(win: ^window, v: vector) ---
-    
-    @(link_name="RGFW_window_moveToMonitor")
     window_moveToMonitor :: proc(win: ^window, m: monitor) ---
-    
-    @(link_name="RGFW_window_resize")
     window_resize :: proc(win: ^window, a: area) ---
-    
-    @(link_name="RGFW_window_setMaxSize")
     window_setMaxSize :: proc(win: ^window, a: area) ---
-    
-    @(link_name="RGFW_window_maximize")
     window_maximize :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_minimize")
     window_minimize :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_restore")
     window_restore :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_setName")
     window_setName :: proc(win: ^window, name: cstring) ---
-    
-    @(link_name="RGFW_window_setIcon")
     window_setIcon :: proc(win: ^window, icon: ^u8, a: area, channels: int) ---
-    
-    @(link_name="RGFW_window_setMouse")
     window_setMouse :: proc(win: ^window, image: [^]u8, a: area, channels: int) ---
-    
-    @(link_name="RGFW_window_setMouseStandard")
-    window_setMouseStandard :: proc(win: ^window, mouse: u8) ---
-    
-    @(link_name="RGFW_window_setMouseDefault")
+    window_setMouseStandard :: proc(win: ^window, mouse: mouseIcons) ---
     window_setMouseDefault :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_mouseHold")
     window_mouseHold :: proc(win: ^window, area: area) ---
-    
-    @(link_name="RGFW_window_mouseUnhold")
     window_mouseUnhold :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_hide")
     window_hide :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_show")
     window_show :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_setShouldClose")
     window_setShouldClose :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_getGlobalMousePoint")
     getGlobalMousePoint :: proc() -> vector ---
-    
-    @(link_name="RGFW_window_getMousePoint")
     window_getMousePoint :: proc(win: ^window) -> vector ---
-    
-    @(link_name="RGFW_window_showMouse")
     window_showMouse :: proc(win: ^window, show: int) ---
-    
-    @(link_name="RGFW_window_moveMouse")
     window_moveMouse :: proc(win: ^window, v: vector) ---
-    
-    @(link_name="RGFW_window_shouldClose")
     window_shouldClose :: proc(win: ^window) -> bool ---
-    
-    @(link_name="RGFW_window_isFullscreen")
     window_isFullscreen :: proc(win: ^window) -> bool ---
-    
-    @(link_name="RGFW_window_isHidden")
     window_isHidden :: proc(win: ^window) -> bool ---
-    
-    @(link_name="RGFW_window_isMinimized")
     window_isMinimized :: proc(win: ^window) -> bool ---
-    
-    @(link_name="RGFW_window_isMaximized")
     window_isMaximized :: proc(win: ^window) -> bool ---
-    
-    @(link_name="RGFW_window_scaleToMonitor")
     window_scaleToMonitor :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_getMonitor")
     window_getMonitor :: proc(win: ^window) -> monitor ---
-    
-    @(link_name="RGFW_window_makeCurrent")
     window_makeCurrent :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_Error")
     Error :: proc() -> bool ---
-    
-    @(link_name="RGFW_isPressedI")
-    isPressedI :: proc(win: ^window, key: u32) -> bool ---
-    
-    @(link_name="RGFW_wasPressedI")
-    wasPressedI :: proc(win: ^window, key: u32) -> bool ---
-    
-    @(link_name="RGFW_isHeldI")
-    isHeldI :: proc(win: ^window, key: u32) -> bool ---
-    
-    @(link_name="RGFW_isReleasedI")
-    isReleasedI :: proc(win: ^window, key: u32) -> bool ---
-    
-    @(link_name="RGFW_isMousePressed")
+    isPressedI :: proc(win: ^window, key: Key) -> b8 ---
+    wasPressedI :: proc(win: ^window, key: Key) -> bool ---
+    isHeldI :: proc(win: ^window, key: Key) -> bool ---
+    isReleasedI :: proc(win: ^window, key: Key) -> bool ---
     isMousePressed :: proc(win: ^window, button: u8) -> bool ---
-    
-    @(link_name="RGFW_isMouseHeld")
     isMouseHeld :: proc(win: ^window, button: u8) -> bool ---
-    
-    @(link_name="RGFW_isMouseReleased")
     isMouseReleased :: proc(win: ^window, button: u8) -> bool ---
-    
-    @(link_name="RGFW_wasMousePressed")
     wasMousePressed :: proc(win: ^window, button: u8) -> bool ---
-    
-    @(link_name="RGFW_keyCodeTokeyStr")
     keyCodeTokeyStr :: proc(key: u64) -> cstring ---
-    
-    @(link_name="RGFW_keyStrToKeyCode")
     keyStrToKeyCode :: proc(key: cstring) -> u32 ---
-    
-    @(link_name="RGFW_isPressedS")
     isPressedS :: proc(win: ^window, key: cstring) -> bool ---
-    
-    @(link_name="RGFW_readClipboard")
     readClipboard :: proc(size: ^u32) -> cstring ---
-    
-    @(link_name="RGFW_writeClipboard")
     writeClipboard :: proc(text: cstring, textLen: u32) ---
-    
-    @(link_name="RGFW_keystrToChar")
     keystrToChar :: proc(key: cstring) -> i8 ---
-    
-    //@(link_name="RGFW_createThread")
     //createThread :: proc(ptr: threadFunc_ptr, args: rawptr) -> thread ---
-    
-    @(link_name="RGFW_cancelThread")
     cancelThread :: proc(t: thread) ---
-    
-    @(link_name="RGFW_joinThread")
     joinThread :: proc(t: thread) ---
-    
-    @(link_name="RGFW_setThreadPriority")
     setThreadPriority :: proc(t: thread, priority: u8) ---
-    
-    @(link_name="RGFW_registerJoystick")
     registerJoystick :: proc(win: ^window, jsNumber: i32) -> u16 ---
-    
-    @(link_name="RGFW_registerJoystickF")
     registerJoystickF :: proc(win: ^window, file: cstring) -> u16 ---
-    
-    @(link_name="RGFW_isPressedJS")
     isPressedJS :: proc(win: ^window, controller: u16, button: u8) -> u32 ---
-    
-    @(link_name="RGFW_getMaxGLVersion")
     getMaxGLVersion :: proc() -> [^]u8 ---
-    
-    @(link_name="RGFW_setGLStencil")
     setGLStencil :: proc(stencil: int) ---
-    
-    @(link_name="RGFW_setGLSamples")
     setGLSamples :: proc(samples: int) ---
-    
-    @(link_name="RGFW_setGLStereo")
     setGLStereo :: proc(stereo: int) ---
-    
-    @(link_name="RGFW_setGLAuxBuffers")
     setGLAuxBuffers :: proc(auxBuffers: int) ---
-    
-    @(link_name="RGFW_setGLVersion")
     setGLVersion :: proc(major: int, minor: int) ---
-    
-    @(link_name="RGFW_getProcAddress")
     getProcAddress :: proc(procname: cstring) -> rawptr ---
-    
-    @(link_name="RGFW_window_swapBuffers")
     window_swapBuffers :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_window_swapInterval")
     window_swapInterval :: proc(win: ^window, swapInterval: int) ---
-    
-    @(link_name="RGFW_window_setGPURender")
     window_setGPURender :: proc(win: ^window, set: int) ---
-    
-    @(link_name="RGFW_window_checkFPS")
     window_checkFPS :: proc(win: ^window) ---
-    
-    @(link_name="RGFW_getTime")
     getTime :: proc() -> u64 ---
-    
-    @(link_name="RGFW_getTimeNS")
     getTimeNS :: proc() -> u64 ---
-    
-    @(link_name="RGFW_sleep")
     sleep :: proc(microseconds: u64) ---
 }
 
