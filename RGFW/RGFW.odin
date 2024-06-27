@@ -242,7 +242,7 @@ Key :: enum u32 {
 };
 
 Event :: struct {
-    keyName : cstring, /*!< key name of event */
+    keyName : [16]i8, /*!< key name of event */
     /*! drag and drop data */
     /* 260 max paths with a max length of 260 */
     droppedFiles : [MAX_DROPS][MAX_PATH]i8,
