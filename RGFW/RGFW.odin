@@ -6,7 +6,6 @@ when (ODIN_OS == .Linux || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD) do foreig
 
 import _c "core:c"
 
-
 /*! Optional arguments for making a windows */
 TRANSPARENT_WINDOW ::	(1<<9) /*!< the window is transparent */
 NO_BORDER	 :: (1<<3) /*!< the window doesn't have border */
@@ -155,10 +154,6 @@ Event :: struct {
     axisesCount : u8, /* number of axises */
     axis : [2]vector /* x, y of axises (-100 to 100) */
 }; /*!< Event structure for checking/getting events */
-
-window_src :: struct {
-    
-}
 
 window ::  struct {
     src : window_src,
