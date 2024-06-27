@@ -74,8 +74,7 @@ jobs:
       run: |
         cp -v ./RGFW/RGFW.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./RGFW/RGFW.odin ./build/${{ env.RELEASE_NAME }}/lib
-        cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.md
-        cp -v ./LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
+        cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.mds
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         
