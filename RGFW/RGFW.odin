@@ -128,11 +128,11 @@ monitor :: struct {
     physH : f32
 }
 
-Event :: struct #packed {
+Event :: struct {
     keyName : cstring, /*!< key name of event */
     /*! drag and drop data */
     /* 260 max paths with a max length of 260 */
-    droppedFiles : ^cstring,
+    droppedFiles : [260]cstring,
     droppedFilesCount : u32, /*!< house many files were dropped */
 
     type : u32, /*!< which event has been sent?*/
@@ -155,9 +155,14 @@ Event :: struct #packed {
     axisesCount : u8, /* number of axises */
     axis : [2]vector /* x, y of axises (-100 to 100) */
 }; /*!< Event structure for checking/getting events */
-        
-window ::  struct #packed {
-    //buffer : ^u8 /* buffer for non-GPU systems (OSMesa, basic software rendering) */
+
+window_src :: struct {
+    
+}
+
+window ::  struct {
+    src : window_src,
+    //buffer : [^]u8 /* buffer for non-GPU systems (OSMesa, basic software rendering) */
     /* when rendering using BUFFER, the buffer is in the RGBA format */
 
     event : Event, /*!< current event */
@@ -168,6 +173,131 @@ window ::  struct #packed {
     /*[the fps is capped when events are checked]*/
 }; /*!< Window structure for managing the window */
 
+RGFW_Key :: enum{
+    RGFW_KEY_NULL = 0,
+    RGFW_Escape,
+    RGFW_F1,
+    RGFW_F2,
+    RGFW_F3,
+    RGFW_F4,
+    RGFW_F5,
+    RGFW_F6,
+    RGFW_F7,
+    RGFW_F8,
+    RGFW_F9,
+    RGFW_F10,
+    RGFW_F11,
+    RGFW_F12,
+
+    RGFW_Backtick,
+
+    RGFW_0,
+    RGFW_1,
+    RGFW_2,
+    RGFW_3,
+    RGFW_4,
+    RGFW_5,
+    RGFW_6,
+    RGFW_7,
+    RGFW_8,
+    RGFW_9,
+
+    RGFW_Minus,
+    RGFW_Equals,
+    RGFW_BackSpace,
+    RGFW_Tab,
+    RGFW_CapsLock,
+    RGFW_ShiftL,
+    RGFW_ControlL,
+    RGFW_AltL,
+    RGFW_SuperL,
+    RGFW_ShiftR,
+    RGFW_ControlR,
+    RGFW_AltR,
+    RGFW_SuperR,
+    RGFW_Space,
+
+    RGFW_a,
+    RGFW_b,
+    RGFW_c,
+    RGFW_d,
+    RGFW_e,
+    RGFW_f,
+    RGFW_g,
+    RGFW_h,
+    RGFW_i,
+    RGFW_j,
+    RGFW_k,
+    RGFW_l,
+    RGFW_m,
+    RGFW_n,
+    RGFW_o,
+    RGFW_p,
+    RGFW_q,
+    RGFW_r,
+    RGFW_s,
+    RGFW_t,
+    RGFW_u,
+    RGFW_v,
+    RGFW_w,
+    RGFW_x,
+    RGFW_y,
+    RGFW_z,
+
+    RGFW_Period,
+    RGFW_Comma,
+    RGFW_Slash,
+    RGFW_Bracket,
+    RGFW_CloseBracket,
+    RGFW_Semicolon,
+    RGFW_Return,
+    RGFW_Quote,
+    RGFW_BackSlash,
+
+    RGFW_Up,
+    RGFW_Down,
+    RGFW_Left,
+    RGFW_Right,
+
+    RGFW_Delete,
+    RGFW_Insert,
+    RGFW_End,
+    RGFW_Home,
+    RGFW_PageUp,
+    RGFW_PageDown,
+
+    RGFW_Numlock,
+    RGFW_KP_Slash,
+    RGFW_Multiply,
+    RGFW_KP_Minus,
+    RGFW_KP_1,
+    RGFW_KP_2,
+    RGFW_KP_3,
+    RGFW_KP_4,
+    RGFW_KP_5,
+    RGFW_KP_6,
+    RGFW_KP_7,
+    RGFW_KP_8,
+    RGFW_KP_9,
+    RGFW_KP_0,
+    RGFW_KP_Period,
+    RGFW_KP_Return
+};
+
+RGFW_mouseIcons :: enum  {
+    RGFW_MOUSE_NORMAL = 0,
+    RGFW_MOUSE_ARROW,
+    RGFW_MOUSE_IBEAM,
+    RGFW_MOUSE_CROSSHAIR,
+    RGFW_MOUSE_POINTING_HAND,
+    RGFW_MOUSE_RESIZE_EW,
+    RGFW_MOUSE_RESIZE_NS,
+    RGFW_MOUSE_RESIZE_NWSE,
+    RGFW_MOUSE_RESIZE_NESW,
+    RGFW_MOUSE_RESIZE_ALL,
+    RGFW_MOUSE_NOT_ALLOWED,
+};
+
 // Thread type definition
 when (ODIN_OS == .Linux || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD || ODIN_OS == .Darwin) {
     thread :: u64
@@ -176,7 +306,7 @@ else {
     thread :: rawptr
 }
 
-foreign native {
+foreign native {   
     @(link_name="RGFW_createWindow")
     createWindow :: proc(string: cstring, rect: rect, args: u16) -> ^window ---
     
@@ -223,10 +353,10 @@ foreign native {
     window_setIcon :: proc(win: ^window, icon: ^u8, a: area, channels: int) ---
     
     @(link_name="RGFW_window_setMouse")
-    window_setMouse :: proc(win: ^window, image: ^u8, a: area, channels: int) ---
+    window_setMouse :: proc(win: ^window, image: [^]u8, a: area, channels: int) ---
     
     @(link_name="RGFW_window_setMouseStandard")
-    window_setMouseStandard :: proc(win: ^window, mouse: rawptr) ---
+    window_setMouseStandard :: proc(win: ^window, mouse: u8) ---
     
     @(link_name="RGFW_window_setMouseDefault")
     window_setMouseDefault :: proc(win: ^window) ---
@@ -349,7 +479,7 @@ foreign native {
     isPressedJS :: proc(win: ^window, controller: u16, button: u8) -> u32 ---
     
     @(link_name="RGFW_getMaxGLVersion")
-    getMaxGLVersion :: proc() -> ^u8 ---
+    getMaxGLVersion :: proc() -> [^]u8 ---
     
     @(link_name="RGFW_setGLStencil")
     setGLStencil :: proc(stencil: int) ---
@@ -389,4 +519,9 @@ foreign native {
     
     @(link_name="RGFW_sleep")
     sleep :: proc(microseconds: u64) ---
+}
+
+/* sourced from https://github.com/odin-lang/Odin/blob/master/vendor/glfw/wrapper.odin */
+gl_set_proc_address :: proc(p: rawptr, name: cstring) {
+	(^rawptr)(p)^ = getProcAddress(name)
 }
