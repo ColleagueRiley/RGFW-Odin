@@ -34,7 +34,7 @@ endif
 
 all:
 	make libRGFW$(LIB_EXT)
-	python3 basic.py
+	odin run basic.odin -file
 
 build-RGFW:
 	make libRGFW$(LIB_EXT)	
@@ -45,9 +45,8 @@ clean:
 debug:
 	make clean
 	make libRGFW$(LIB_EXT)
-	#odin run generate.odin -file
-	odin run test.odin -file
-	./test
+	odin run basic.odin -file
+	./basic
 
 RGFW/RGFW.h:
 	mkdir -p RGFW
