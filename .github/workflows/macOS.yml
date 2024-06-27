@@ -73,12 +73,12 @@ jobs:
 
 
         # Build RGFW-buffer x86_64 dynamic
-        make RGFW-buffer/libRGFW.dylib CUSTOM_CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
+        make RGFW/libRGFW.dylib CUSTOM_CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
         mv RGFW-buffer/libRGFW.dylib /tmp/libRGFW_x86_64.dylib
         rm -f RGFW.o
         
         # Build RGFW-buffer arm64 dynamic
-        make RGFW-buffer/libRGFW.dylib CUSTOM_CFLAGS="-target arm64-apple-macos11 -DGL_SILENCE_DEPRECATION"
+        make RGFW/libRGFW.dylib CUSTOM_CFLAGS="-target arm64-apple-macos11 -DGL_SILENCE_DEPRECATION"
         mv RGFW-buffer/libRGFW.dylib /tmp/libRGFW_arm64.dylib
         
         # Join x86_64 and arm64 dynamic
