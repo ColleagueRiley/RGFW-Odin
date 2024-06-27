@@ -4,20 +4,21 @@ import "core:fmt"
 import "RGFW"
 import gl "vendor:OpenGL"
 
-
-icon := []u8{0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF};
+running := true
 
 main :: proc() {  
-    RGFW.setGLVersion(3, 3);
     win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, RGFW.ALLOW_DND | RGFW.CENTER);
     RGFW.window_makeCurrent(win);
 
-    RGFW.window_swapInterval(win, 1);
-    RGFW.window_setIcon(win, raw_data(icon), {3, 3}, 4);
-
     gl.load_up_to(3, 3, RGFW.gl_set_proc_address)
 
-    for (!RGFW.window_shouldClose(win)) {   
+    RGFW.window_swapInterval(win, 1);
+    
+    i : u32;
+
+    gl.ClearColor(0, 0, 0, 0);
+
+    for (running && RGFW.isPressedI(win, .Escape) == false) {   
         for (RGFW.window_checkEvent(win) != nil) {
             if (win.event.type == RGFW.windowMoved) {
                 fmt.printf("window moved\n");
@@ -26,11 +27,12 @@ main :: proc() {
                 fmt.printf("window resized\n");
             }
             if (win.event.type == RGFW.quit) {
+                running = false;  
                 break;
             }
             
             if (win.event.type == RGFW.dnd) {
-                for i := u32(0); i < win.event.droppedFilesCount; i += 1 {
+                for i = 0; i < win.event.droppedFilesCount; i+=1 {
                     fmt.printf("dropped : %s\n", win.event.droppedFiles[i]);
                 }
             }
@@ -42,11 +44,9 @@ main :: proc() {
             }
         }
         
-        fmt.printf("%i\n", win.event.type)
-        
         drawLoop(win);
     }
-
+    
     RGFW.window_close(win);
 }
 
