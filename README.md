@@ -51,7 +51,9 @@ main :: proc() {
 	window := RGFW.createWindow("window", {200, 200, 200, 200}, RGFW.CENTER);
 	RGFW.window_makeCurrent(window);
 
-	for !RGFW.window_shouldClose(window) {
+	gl.load_up_to(3, 3, RGFW.gl_set_proc_address)
+	
+	for (!RGFW.window_shouldClose(window)) {
 		RGFW.window_checkEvent(window);
 
 
