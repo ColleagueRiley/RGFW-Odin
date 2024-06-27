@@ -35,6 +35,7 @@ endif
 
 all:
 	make RGFW/libRGFW$(LIB_EXT)
+	make RGFW-buffer/libRGFW$(LIB_EXT)
 	$(ODIN) build basic.odin -file
 	$(ODIN) build basic-buffer.odin -file
 
@@ -47,6 +48,7 @@ clean:
 debug:
 	make clean
 	make RGFW/libRGFW$(LIB_EXT)
+	make RGFW-buffer/libRGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
 	$(ODIN) run basic-buffer.odin -file
 
@@ -64,11 +66,16 @@ RGFW/RGFW.h:
 RGFW/RGFW.o:
 	make RGFW/RGFW.h
 	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW/RGFW.h -D RGFW_IMPLEMENTATION -D RGFW_NO_JOYSTICK_CODES -fPIC -o RGFW/RGFW.o
+	
+RGFW-buffer/RGFW.o:
 	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW-buffer/RGFW.h -D RGFW_BUFFER -D RGFW_OPENGL -D RGFW_IMPLEMENTATION -D RGFW_NO_JOYSTICK_CODES -fPIC -o RGFW-buffer/RGFW.o
 
 RGFW/libRGFW$(LIB_EXT):
 	make RGFW/RGFW.o
 	$(CC) $(CUSTOM_CFLAGS) -shared RGFW/RGFW.o $(LIBS) -o RGFW/libRGFW$(LIB_EXT)
+
+RGFW-buffer/libRGFW$(LIB_EXT):
+	make RGFW-buffer/RGFW.o
 	$(CC) $(CUSTOM_CFLAGS) -shared RGFW-buffer/RGFW.o $(LIBS) -o RGFW-buffer/libRGFW$(LIB_EXT)
 
 clean:
