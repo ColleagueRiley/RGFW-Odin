@@ -33,29 +33,28 @@ ifeq ($(detected_OS),Linux)
 endif
 
 all:
-	make libRGFW$(LIB_EXT)
+	make RGFW/libRGFW$(LIB_EXT)
 	odin run basic.odin -file
 
 build-RGFW:
-	make libRGFW$(LIB_EXT)	
+	make RGFW/libRGFW$(LIB_EXT)	
 
 clean:
 	rm -f libRGFW.so libRGFW.dll libRGFW.dylib RGFW.o
 
 debug:
 	make clean
-	make libRGFW$(LIB_EXT)
+	make RGFW/libRGFW$(LIB_EXT)
 	odin run basic.odin -file
 	./basic
 
 RGFW/RGFW.h:
-	mkdir -p RGFW
 	curl -o RGFW/RGFW.h https://raw.githubusercontent.com/ColleagueRiley/RGFW/main/RGFW.h
 
-RGFW.o:
+RGFW/RGFW.o:
 	make RGFW/RGFW.h
-	cd RGFW && $(CC) $(CUSTOM_CFLAGS) -x c -c RGFW.h -D RGFW_IMPLEMENTATION -D RGFW_NO_JOYSTICK_CODES -fPIC
+	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW/RGFW.h -D RGFW_IMPLEMENTATION -D RGFW_NO_JOYSTICK_CODES -fPIC -o RGFW/RGFW.o
 
-libRGFW$(LIB_EXT):
-	make RGFW.o
-	cd RGFW && $(CC) $(CUSTOM_CFLAGS) -shared RGFW.o $(LIBS) -o libRGFW$(LIB_EXT)
+RGFW/libRGFW$(LIB_EXT):
+	make RGFW/RGFW.o
+	$(CC) $(CUSTOM_CFLAGS) -shared RGFW/RGFW.o $(LIBS) -o RGFW/libRGFW$(LIB_EXT)
