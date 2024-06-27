@@ -36,6 +36,7 @@ endif
 all:
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) build basic.odin -file
+	$(ODIN) build basic-buffer.odin -file
 
 build-RGFW:
 	make RGFW/libRGFW$(LIB_EXT)	
@@ -47,6 +48,7 @@ debug:
 	make clean
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
+	$(ODIN) run basic-buffer.odin -file
 
 Odin:
 	git clone https://github.com/odin-lang/Odin

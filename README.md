@@ -11,8 +11,9 @@ Odin bindings for RGFW,
 
 RGFW is a free multi-platform single-header very simple-to-use framework library for creating GUI Libraries or simple GUI programs. it is meant to be used as a very small and flexible alternative library to GLFW. 
 
+
 The window backend supports XLib (UNIX), Cocoas (MacOS) and WinAPI (Windows)\
-The graphics backend supports OpenGL (EGL, software, OSMesa, GLES), Vulkan, DirectX and software rendering buffers.
+The graphics backend supports OpenGL (./RGFW) and software rendering buffers (./RGFW-buffer).
 
 RGFW was designed as a backend for RSGL, but it can be used standalone or for other libraries, such as Raylib which uses it as an optional alternative backend.
 
@@ -37,7 +38,10 @@ you can also run `make` to build and then run an example program or `make debug`
 ![examples](https://github.com/ColleagueRiley/RGFW/blob/main/screenshot.PNG?raw=true)
 
 ## basic 
-A basic example can be found in `basic.py`, it includes a basic OpenGL example of just about all of RGFW's functionalities.
+A basic example can be found in `basic.odin`, it includes a basic OpenGL example of just about all of RGFW's functionalities.
+
+## basic buffer
+A basic example can be found in `basic-buffer.odin`, it includes a basic OpenGL example of buffer rendering with odin
 
 ## a very simple example
 ```c
