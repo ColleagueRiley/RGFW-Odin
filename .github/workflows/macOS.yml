@@ -84,7 +84,7 @@ jobs:
         # Join x86_64 and arm64 dynamic
         rm -f ./build/RGFW-buffer/*
         lipo -create -output RGFW-buffer/libRGFW.dylib /tmp/libRGFW_x86_64.dylib /tmp/libRGFW_arm64.dylib
-        ln -sv RGFW-buffer/libRGFW.dylib  build/${{ env.RELEASE_NAME }}/RGFW/libRGFW.dylib
+        ln -sv RGFW-buffer/libRGFW.dylib  build/${{ env.RELEASE_NAME }}/RGFW-buffer/libRGFW.dylib
 
       #  make Odin/odin
       #  make ODIN=Odin/odin
