@@ -70,8 +70,8 @@ jobs:
         lipo -create -output RGFW/libRGFW.dylib /tmp/libRGFW_x86_64.dylib /tmp/libRGFW_arm64.dylib
         ln -sv RGFW/libRGFW.dylib  build/${{ env.RELEASE_NAME }}/lib/libRGFW.dylib
 
-        make Odin/odin
-        make ODIN=Odin/odin
+      #  make Odin/odin
+      #  make ODIN=Odin/odin
 
     - name: Generate Artifacts
       run: |

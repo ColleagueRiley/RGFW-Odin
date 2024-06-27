@@ -60,8 +60,9 @@ jobs:
         ${{ matrix.ARCH }}-w64-mingw32-gcc.exe --version
         windres.exe --version
         dir C:\msys64\mingw64\bin
-        make Odin/odin
-        make ODIN=./Odin/odin.exe
+        make build-RGFW
+       # make Odin/odin
+       # make ODIN=./Odin/odin.exe
       shell: cmd
       if: |
         matrix.compiler == 'mingw-w64' &&
