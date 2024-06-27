@@ -2,7 +2,7 @@ CC = gcc
 
 CUSTOM_CFLAGS = 
 
-LIBS := -w -lgdi32 -lm -lopengl32 -ggdb 
+LIBS := -w -lgdi32 -lm -lopengl32 -lwinmm -ggdb 
 LIB_EXT = .dll
 
 ifneq (,$(filter $(CC),winegcc x86_64-w64-mingw32-gcc))
@@ -20,7 +20,7 @@ else
 endif
 
 ifeq ($(detected_OS),Windows)
-	LIBS := -ggdb -lshell32 -lgdi32 -lopengl32
+	LIBS := -ggdb -lshell32 -lgdi32 -lopengl32 -lwinmm
 	LIB_EXT = .dll
 endif
 ifeq ($(detected_OS),Darwin)        # Mac OS X
