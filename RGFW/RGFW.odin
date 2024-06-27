@@ -354,6 +354,7 @@ foreign native {
     keyStrToKeyCode :: proc(key: cstring) -> u32 ---
     isPressedS :: proc(win: ^window, key: cstring) -> bool ---
     readClipboard :: proc(size: ^u32) -> cstring ---
+    clipboardFree :: proc(str: cstring)  ---
     writeClipboard :: proc(text: cstring, textLen: u32) ---
     keystrToChar :: proc(key: cstring) -> i8 ---
     //createThread :: proc(ptr: threadFunc_ptr, args: rawptr) -> thread ---
