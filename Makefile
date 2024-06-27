@@ -41,6 +41,7 @@ all:
 
 build-RGFW:
 	make RGFW/libRGFW$(LIB_EXT)	
+	make RGFW-buffer/libRGFW$(LIB_EXT)	
 
 clean:
 	rm -f libRGFW.so libRGFW.dll libRGFW.dylib RGFW.o
