@@ -47,7 +47,6 @@ debug:
 	make clean
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
-	./basic
 
 Odin:
 	git clone https://github.com/odin-lang/Odin
