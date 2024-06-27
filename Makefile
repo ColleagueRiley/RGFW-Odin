@@ -1,5 +1,6 @@
 CC = gcc
 
+ODIN = odin
 CUSTOM_CFLAGS = 
 
 LIBS := -w -lgdi32 -lm -lopengl32 -lwinmm -ggdb 
@@ -34,7 +35,7 @@ endif
 
 all:
 	make RGFW/libRGFW$(LIB_EXT)
-	odin run basic.odin -file
+	$(ODIN) build basic.odin -file
 
 build-RGFW:
 	make RGFW/libRGFW$(LIB_EXT)	
@@ -45,8 +46,15 @@ clean:
 debug:
 	make clean
 	make RGFW/libRGFW$(LIB_EXT)
-	odin run basic.odin -file
+	$(ODIN) run basic.odin -file
 	./basic
+
+Odin:
+	git clone https://github.com/odin-lang/Odin
+
+Odin/odin:
+	make Odin
+	cd Odin && make
 
 RGFW/RGFW.h:
 	curl -o RGFW/RGFW.h https://raw.githubusercontent.com/ColleagueRiley/RGFW/main/RGFW.h
