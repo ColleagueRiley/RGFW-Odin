@@ -271,7 +271,7 @@ Event :: struct {
 
 window ::  struct {
     src : window_src,
-    //buffer : [^]u8 /* buffer for non-GPU systems (OSMesa, basic software rendering) */
+    buffer : [^]u8, /* buffer for non-GPU systems (OSMesa, basic software rendering) */
     /* when rendering using BUFFER, the buffer is in the RGBA format */
 
     event : Event, /*!< current event */
@@ -306,7 +306,8 @@ else {
 
 @(default_calling_convention="c", link_prefix="RGFW_")
 foreign native {   
-    createWindow :: proc(string: cstring, rect: rect, args: u16) -> ^window ---
+    @(link_name="RGFW_createWindow")
+    createWindowSrc :: proc(string: cstring, rect: rect, args: u16) -> ^window ---
     window_close :: proc(window: ^window) ---
     window_checkEvent ::  proc "c" (window: ^window) -> ^Event ---
     getMonitors :: proc() -> [6]monitor ---
@@ -374,10 +375,17 @@ foreign native {
     window_swapBuffers :: proc(win: ^window) ---
     window_swapInterval :: proc(win: ^window, swapInterval: int) ---
     window_setGPURender :: proc(win: ^window, set: int) ---
+    window_setCPURender :: proc(win: ^window, set: int) ---
     window_checkFPS :: proc(win: ^window) ---
     getTime :: proc() -> u64 ---
     getTimeNS :: proc() -> u64 ---
     sleep :: proc(microseconds: u64) ---
+}
+
+createWindow :: proc(string: cstring, rect: rect, args: u16) -> ^window {
+    window := createWindowSrc(string, rect, args)
+    window_setCPURender(window, 0)
+    return window
 }
 
 /* sourced from https://github.com/odin-lang/Odin/blob/master/vendor/glfw/wrapper.odin */

@@ -6,6 +6,8 @@ window_src :: struct {
     window : x11.Window, /*!< source window */
     rSurf : rawptr, /*!< source graphics context (GLXContext) */
 
+    bitmap : ^x11.XImage,
+
     jsPressed : [4][16]u8, /* if a key is currently pressed or not (per joystick) */
 
     joysticks : [4]i32, /* limit of 4 joysticks at a time */

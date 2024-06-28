@@ -8,6 +8,8 @@ window_src :: struct {
 
     rSurf : rawptr, /*!< source graphics context */
 
+    bitmap : rawptr, /* API's bitmap for storing or managing */
+    image : rawptr,
 
     view : rawptr, /*apple viewpoint thingy*/
 

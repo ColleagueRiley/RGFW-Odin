@@ -67,7 +67,6 @@ jobs:
     - name: Generate Artifacts
       run: |
         cp -v -r ./RGFW/ ./build/${{ env.RELEASE_NAME }}/
-        cp -v -r ./RGFW-buffer/ ./build/${{ env.RELEASE_NAME }}/
         cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.md
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}

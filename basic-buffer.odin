@@ -1,7 +1,7 @@
 package main
 
 import "core:fmt"
-import RGFW "RGFW-buffer"
+import RGFW "RGFW"
 import gl "vendor:OpenGL"
 import "core:mem"
 
@@ -21,6 +21,9 @@ main :: proc() {
     win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, RGFW.ALLOW_DND | RGFW.CENTER);
     RGFW.window_makeCurrent(win);
     
+    RGFW.window_setCPURender(win, 1)
+    RGFW.window_setGPURender(win, 0)
+
     screenSize = RGFW.getScreenSize()
 
     for (RGFW.window_shouldClose(win) == false) {   
