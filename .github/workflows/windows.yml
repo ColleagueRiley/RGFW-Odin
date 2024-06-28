@@ -69,7 +69,6 @@ jobs:
     - name: Generate Artifacts
       run: |
         xcopy .\RGFW .\build\${{ env.RELEASE_NAME }}\RGFW /E /I /Y
-        xcopy .\RGFW-buffer .\build\${{ env.RELEASE_NAME }}\RGFW-buffer /E /I /Y
         copy /Y .\README.md .\build\${{ env.RELEASE_NAME }}\README.md
         cd build
         7z a ./${{ env.RELEASE_NAME }}.zip ./${{ env.RELEASE_NAME }}

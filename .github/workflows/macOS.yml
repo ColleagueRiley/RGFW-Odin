@@ -66,26 +66,12 @@ jobs:
         # Join x86_64 and arm64 dynamic
         rm -f ./build/RGFW/*
         lipo -create -output RGFW/libRGFW.dylib /tmp/libRGFW_x86_64.dylib /tmp/libRGFW_arm64.dylib
-
-        # Build RGFW-buffer x86_64 dynamic
-        make RGFW-buffer/libRGFW.dylib CUSTOM_CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
-        mv RGFW-buffer/libRGFW.dylib /tmp/libRGFW_x86_64.dylib
-        rm -f RGFW.o
-        
-        # Build RGFW-buffer arm64 dynamic
-        make RGFW-buffer/libRGFW.dylib CUSTOM_CFLAGS="-target arm64-apple-macos11 -DGL_SILENCE_DEPRECATION"
-        mv RGFW-buffer/libRGFW.dylib /tmp/libRGFW_arm64.dylib
-        
-        # Join x86_64 and arm64 dynamic
-        rm -f ./build/RGFW-buffer/*
-        lipo -create -output RGFW-buffer/libRGFW.dylib /tmp/libRGFW_x86_64.dylib /tmp/libRGFW_arm64.dylib
       #  make Odin/odin
       #  make ODIN=Odin/odin
 
     - name: Generate Artifacts
       run: |
         cp -v -r ./RGFW ./build/${{ env.RELEASE_NAME }}
-        cp -v -r ./RGFW-buffer ./build/${{ env.RELEASE_NAME }}
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         
