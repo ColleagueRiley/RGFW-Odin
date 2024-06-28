@@ -18,7 +18,7 @@ drawRect :: proc(win : ^RGFW.window, r : RGFW.rect, color: ^[3]u8) {
 }
 
 main :: proc() {  
-    win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, RGFW.ALLOW_DND | RGFW.CENTER);
+    win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, .ALLOW_DND | .CENTER);
     RGFW.window_makeCurrent(win);
     
     RGFW.window_setCPURender(win, 1)
@@ -28,12 +28,12 @@ main :: proc() {
 
     for (RGFW.window_shouldClose(win) == false) {   
         for (RGFW.window_checkEvent(win) != nil) {
-            if (win.event.type == RGFW.quit) {
+            if (win.event.type == .quit) {
                 break;
             }
         }
         
-        if (win.event.type == RGFW.quit) {
+        if (win.event.type == .quit) {
             break;
         }
         

@@ -9,74 +9,83 @@ import _c "core:c"
 MAX_PATH :: 260 /* max length of a path (for dnd) */
 MAX_DROPS :: 260 /* max items you can drop at once */
 
-/*! Optional arguments for making a windows */
-TRANSPARENT_WINDOW ::	(1<<9) /*!< the window is transparent */
-NO_BORDER	 :: (1<<3) /*!< the window doesn't have border */
-NO_RESIZE	 :: (1<<4) /*!< the window cannot be resized  by the user */
-ALLOW_DND     :: (1<<5) /*!< the window supports drag and drop*/
-HIDE_MOUSE :: (1<<6) /*! the window should hide the mouse or not (can be toggled later on) using `window_mouseShow*/
-FULLSCREEN :: (1<<8) /* the window is fullscreen by default or not */
-CENTER :: (1<<10) /*! center the window on the screen */
-OPENGL_SOFTWARE :: (1<<11) /*! use OpenGL software rendering */
-COCOA_MOVE_TO_RESOURCE_DIR :: (1 << 12) /* (cocoa only), move to resource folder */
-SCALE_TO_MONITOR :: (1 << 13) /* scale the window to the screen */
+window_args :: enum(u16) {
+    /*! Optional arguments for making a windows */
+    TRANSPARENT_WINDOW =	(1<<9), /*!< the window is transparent */
+    NO_BORDER	 = (1<<3), /*!< the window doesn't have border */
+    NO_RESIZE	 = (1<<4), /*!< the window cannot be resized  by the user */
+    ALLOW_DND     = (1<<5), /*!< the window supports drag and drop*/
+    HIDE_MOUSE = (1<<6), /*! the window should hide the mouse or not (can be toggled later on) using `window_mouseShow*/
+    FULLSCREEN = (1<<8), /* the window is fullscreen by default or not */
+    CENTER = (1<<10), /*! center the window on the screen */
+    OPENGL_SOFTWARE = (1<<11), /*! use OpenGL software rendering */
+    COCOA_MOVE_TO_RESOURCE_DIR = (1 << 12), /* (cocoa only), move to resource folder */
+    SCALE_TO_MONITOR = (1 << 13), /* scale the window to the screen */
 
-NO_GPU_RENDER :: (1<<14) /* don't render (using the GPU based API)*/
-NO_CPU_RENDER :: (1<<15) /* don't render (using the CPU based buffer rendering)*/
+    NO_GPU_RENDER = (1<<14), /* don't render (using the GPU based API)*/
+    NO_CPU_RENDER = (1<<15) /* don't render (using the CPU based buffer rendering)*/
+}
 
-/*! event codes */
-keyPressed :: 2 /* a key has been pressed */
-keyReleased :: 3 /*!< a key has been released*/
-/*! key event note
-the code of the key pressed is stored in
-Event.keyCode
-!!Keycodes defined at the bottom of the header file!!
+event_codes :: enum u32 {
+    /*! event codes */
+    keyPressed = 2, /* a key has been pressed */
+    keyReleased = 3, /*!< a key has been released*/
+    /*! key event note
+    the code of the key pressed is stored in
+    Event.keyCode
+    !!Keycodes defined at the bottom of the header file!!
 
-while a string version is stored in
-Event.KeyString
+    while a string version is stored in
+    Event.KeyString
 
-Event.lockState holds the current lockState
-this means if CapsLock, NumLock are active or not
-*/
-mouseButtonPressed :: 4 /*!< a mouse button has been pressed (left,middle,right)*/
-mouseButtonReleased :: 5 /*!< a mouse button has been released (left,middle,right)*/
-mousePosChanged :: 6 /*!< the position of the mouse has been changed*/
-/*! mouse event note
-the x and y of the mouse can be found in the vector, Event.point
+    Event.lockState holds the current lockState
+    this means if CapsLock, NumLock are active or not
+    */
+    mouseButtonPressed = 4, /*!< a mouse button has been pressed (left,middle,right)*/
+    mouseButtonReleased = 5, /*!< a mouse button has been released (left,middle,right)*/
+    mousePosChanged = 6, /*!< the position of the mouse has been changed*/
+    /*! mouse event note
+    the x and y of the mouse can be found in the vector, Event.point
 
-Event.button holds which mouse button was pressed
-*/
-jsButtonPressed :: 7 /*!< a joystick button was pressed */
-jsButtonReleased :: 8 /*!< a joystick button was released */
-jsAxisMove :: 9 /*!< an axis of a joystick was moved*/
-/*! joystick event note
-Event.joystick holds which joystick was altered, if any
-Event.button holds which joystick button was pressed
+    Event.button holds which mouse button was pressed
+    */
+    jsButtonPressed = 7, /*!< a joystick button was pressed */
+    jsButtonReleased = 8, /*!< a joystick button was released */
+    jsAxisMove = 9, /*!< an axis of a joystick was moved*/
+    /*! joystick event note
+    Event.joystick holds which joystick was altered, if any
+    Event.button holds which joystick button was pressed
 
-Event.axis holds the data of all the axis
-Event.axisCount says how many axis there are
-*/
-windowMoved :: 10 /*!< the window was moved (by the user) */
-windowResized :: 11 /*!< the window was resized (by the user) */
+    Event.axis holds the data of all the axis
+    Event.axisCount says how many axis there are
+    */
+    windowMoved = 10, /*!< the window was moved (by the user) */
+    windowResized = 11, /*!< the window was resized (by the user) */
 
-focusIn :: 12 /*!< window is in focus now */
-focusOut :: 13 /*!< window is out of focus now */
+    focusIn = 12, /*!< window is in focus now */
+    focusOut = 13, /*!< window is out of focus now */
 
-/* attribs change event note
-The event data is sent straight to the window structure
-with win->r.x, win->r.y, win->r.w and win->r.h
-*/
-quit :: 33 /*!< the user clicked the quit button*/ 
-dnd :: 34 /*!< a file has been dropped into the window*/
-dnd_init :: 35 /*!< the start of a dnd event, when the place where the file drop is known */
-/* dnd data note
-    The x and y coords of the drop are stored in the vector Event.point
+    RGFW_mouseEnter = 14, /* mouse entered the window */
+    RGFW_mouseLeave = 15, /* mouse left the window */
 
-    Event.droppedFilesCount holds how many files were dropped
+    RGFW_windowRefresh = 16, /* The window content needs to be refreshed */
 
-    This is also the size of the array which stores all the dropped file string,
-    Event.droppedFiles
-*/
+    /* attribs change event note
+    The event data is sent straight to the window structure
+    with win->r.x, win->r.y, win->r.w and win->r.h
+    */
+    quit = 33, /*!< the user clicked the quit button*/ 
+    dnd = 34, /*!< a file has been dropped into the window*/
+    dnd_init = 35, /*!< the start of a dnd event, when the place where the file drop is known */
+    /* dnd data note
+        The x and y coords of the drop are stored in the vector Event.point
+
+        Event.droppedFilesCount holds how many files were dropped
+
+        This is also the size of the array which stores all the dropped file string,
+        Event.droppedFiles
+    */
+}
 
 /*! mouse button codes (Event.button) */
 mouseLeft :: 1 /*!< left mouse button is pressed*/
@@ -85,8 +94,10 @@ mouseRight :: 3 /*!< right mouse button is pressed*/
 mouseScrollUp :: 4 /*!< mouse wheel is scrolling up*/
 mouseScrollDown :: 5 /*!< mouse wheel is scrolling down*/
 
-CAPSLOCK :: (1 << 1)
-NUMLOCK :: (1 << 2)
+lockStates :: enum u8 {
+    CAPSLOCK = (1 << 1),
+    NUMLOCK = (1 << 2)
+}
 
 JS_A :: 0 /* or PS X button */
 JS_B :: 1 /* or PS circle button */
@@ -248,7 +259,7 @@ Event :: struct {
     droppedFiles : [MAX_DROPS][MAX_PATH]i8,
     droppedFilesCount : u32, /*!< house many files were dropped */
 
-    type : u32, /*!< which event has been sent?*/
+    type : event_codes, /*!< which event has been sent?*/
     point : vector, /*!< mouse x, y of event (or drop point) */
     keyCode : Key,  /*!< keycode of event 	!!Keycodes defined at the bottom of the header file!! */
 
@@ -258,7 +269,7 @@ Event :: struct {
 
     inFocus : u8,  /*if the window is in focus or not*/
 
-    lockState : u8,
+    lockState : lockStates,
 
     joystick : u16, /* which joystick this event applies to (if applicable to any) */
 
@@ -307,7 +318,7 @@ else {
 @(default_calling_convention="c", link_prefix="RGFW_")
 foreign native {   
     @(link_name="RGFW_createWindow")
-    createWindowSrc :: proc(string: cstring, rect: rect, args: u16) -> ^window ---
+    createWindowSrc :: proc(string: cstring, rect: rect, args: window_args) -> ^window ---
     window_close :: proc(window: ^window) ---
     window_checkEvent ::  proc "c" (window: ^window) -> ^Event ---
     getMonitors :: proc() -> [6]monitor ---
@@ -382,7 +393,7 @@ foreign native {
     sleep :: proc(microseconds: u64) ---
 }
 
-createWindow :: proc(string: cstring, rect: rect, args: u16) -> ^window {
+createWindow :: proc(string: cstring, rect: rect, args: window_args) -> ^window {
     window := createWindowSrc(string, rect, args)
     window_setCPURender(window, 0)
     return window

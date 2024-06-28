@@ -9,7 +9,7 @@ running := true
 icon := []u8{0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF};
 
 main :: proc() {  
-    win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, RGFW.ALLOW_DND | RGFW.CENTER);
+    win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, .ALLOW_DND | .CENTER);
     RGFW.window_makeCurrent(win);
 
     gl.load_up_to(3, 3, RGFW.gl_set_proc_address)
@@ -21,13 +21,13 @@ main :: proc() {
 
     for (running && RGFW.isPressedI(win, .Escape) == false) {   
         for (RGFW.window_checkEvent(win) != nil) {
-            if (win.event.type == RGFW.windowMoved) {
+            if (win.event.type == .windowMoved) {
                 fmt.printf("window moved\n");
             }
-            else if (win.event.type == RGFW.windowResized) {
+            else if (win.event.type == .windowResized) {
                 fmt.printf("window resized\n");
             }
-            if (win.event.type == RGFW.quit) {
+            if (win.event.type == .quit) {
                 running = false;  
                 break;
             }
@@ -52,15 +52,15 @@ main :: proc() {
                 RGFW.window_setMouse(win, raw_data(icon), {3, 3}, 4);
             }   
 
-            if (win.event.type == RGFW.dnd) {
+            if (win.event.type == .dnd) {
                 for i := u32(0); i < win.event.droppedFilesCount; i += 1 {
                     fmt.printf("dropped : %s\n", win.event.droppedFiles[i]);
                 }
             }
-            else if (win.event.type == RGFW.jsButtonPressed) {
+            else if (win.event.type == .jsButtonPressed) {
                 fmt.printf("pressed %i\n", win.event.button);
             }
-            else if (win.event.type == RGFW.jsAxisMove && !bool(win.event.button)) {
+            else if (win.event.type == .jsAxisMove && !bool(win.event.button)) {
                 fmt.printf("{%i, %i}\n", win.event.axis[0].x, win.event.axis[0].y);
             }
         }
