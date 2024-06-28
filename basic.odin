@@ -8,9 +8,16 @@ running := true
 
 icon := []u8{0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF};
 
+gotMsg := false
+keyfunc ::  proc "c" (win : ^RGFW.window, key : RGFW.Key, keyName : [16]i8, lockState : u8, pressed : u8) {
+    gotMsg = true // because you can't call odin functions from C-odin functions
+}
+
 main :: proc() {  
     win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, .ALLOW_DND | .CENTER);
     RGFW.window_makeCurrent(win);
+
+    RGFW.setKeyCallback(keyfunc)
 
     gl.load_up_to(3, 3, RGFW.gl_set_proc_address)
 
@@ -20,6 +27,11 @@ main :: proc() {
     gl.ClearColor(0, 0, 0, 0);
 
     for (running && RGFW.isPressedI(win, .Escape) == false) {   
+        if (gotMsg) {
+            fmt.printf("got message from callback\n")
+            gotMsg = false
+        }
+
         for (RGFW.window_checkEvent(win) != nil) {
             if (win.event.type == .windowMoved) {
                 fmt.printf("window moved\n");

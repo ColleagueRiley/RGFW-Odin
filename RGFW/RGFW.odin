@@ -315,6 +315,33 @@ else {
     thread :: rawptr
 }
 
+
+windowmovefunc :: #type proc "c" (win : ^window, r : rect)
+/* windowResized, the window and its new rect value  */
+windowresizefunc :: #type proc "c" (win : ^window, r : rect)
+/* quit, the window that was closed */
+windowquitfunc :: #type proc "c" (win : ^window)
+/* focusIn / RGFW_focusOut, the window who's focus has changed and if its inFocus */
+focusfunc :: #type proc "c" (win : ^window, inFocus : u8)
+/* mouseEnter / RGFW_mouseLeave, the window that changed, the point of the mouse (enter only) and if the mouse has entered */
+mouseNotifyfunc :: #type proc "c" (win : ^window, point : vector, status : u8)
+/* mousePosChanged, the window that the move happened on and the new point of the mouse  */
+mouseposfunc :: #type proc "c" (win : ^window, point : vector)
+/*  dnd, the window that had the drop, the drop data and the amount files dropped */
+dndfunc :: #type proc "c" (win : ^window, droppedFiles : [^]cstring, droppedFilesCount : u32)
+/* dnd_init, the window, the point of the drop on the windows */
+dndInitfunc :: #type proc "c" (win : ^window, point : vector)
+/* indowRefresh, the window that needs to be refreshed */
+windowrefreshfunc :: #type proc "c" (win : ^window)
+/* keyPressed / RGFW_keyReleased, the window that got the event, the keycode, the string version, the state of mod keys, if it was a press (else it's a release) */
+keyfunc :: #type proc "c" (win : ^window, key : Key, keyName : [16]i8, lockState : u8, pressed : u8)
+/* mouseButtonPressed / mouseButtonReleased, the window that got the event, the button that was pressed, the scroll value, if it was a press (else it's a release)  */
+mousebuttonfunc :: #type proc "c" (win : ^window, button : u8, scroll : f64, pressed : u8)
+/* jsButtonPressed / sButtonReleased, the window that got the event, the button that was pressed, the scroll value, if it was a press (else it's a release) */
+jsButtonfunc :: #type proc "c" (win : ^window, joystick : u16, button : u8, pressed : u8)
+/* jsAxisMove, the window that got the event, the joystick in question, the axis values and the amount of axises */
+jsAxisfunc :: #type proc "c" (win : ^window, joystick : u16, axis : [2]vector, axisesCount : u8)
+
 @(default_calling_convention="c", link_prefix="RGFW_")
 foreign native {   
     @(link_name="RGFW_createWindow")
@@ -362,7 +389,7 @@ foreign native {
     isMouseHeld :: proc(win: ^window, button: u8) -> bool ---
     isMouseReleased :: proc(win: ^window, button: u8) -> bool ---
     wasMousePressed :: proc(win: ^window, button: u8) -> bool ---
-    keyCodeTokeyStr :: proc(key: u64) -> cstring ---
+    keyCodeTokeyStr :: proc(key: Key) -> cstring ---
     keyStrToKeyCode :: proc(key: cstring) -> u32 ---
     isPressedS :: proc(win: ^window, key: cstring) -> bool ---
     readClipboard :: proc(size: ^u32) -> cstring ---
@@ -391,6 +418,20 @@ foreign native {
     getTime :: proc() -> u64 ---
     getTimeNS :: proc() -> u64 ---
     sleep :: proc(microseconds: u64) ---
+
+	setWindowMoveCallback :: proc(func : windowmovefunc)  ---
+	setWindowResizeCallback :: proc(func : windowresizefunc)  ---
+	setWindowQuitCallback :: proc(func : windowquitfunc)  ---
+	setMousePosCallback :: proc(func : mouseposfunc)  ---
+	setWindowRefreshCallback :: proc(func : windowrefreshfunc)  ---
+	setFocusCallback :: proc(func : focusfunc)  ---
+	setMouseNotifyCallBack :: proc(func : mouseNotifyfunc)  ---
+	setDndCallback :: proc(func : dndfunc) ---
+	setDndInitCallback :: proc(func : dndInitfunc) ---
+	setKeyCallback :: proc(func : keyfunc) ---
+	setMouseButtonCallback :: proc(func : mousebuttonfunc) ---
+	setjsButtonCallback :: proc(func : jsButtonfunc) ---
+	setjsAxisCallback :: proc(func : jsAxisfunc) ---
 }
 
 createWindow :: proc(string: cstring, rect: rect, args: window_args) -> ^window {
