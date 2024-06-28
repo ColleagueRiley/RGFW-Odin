@@ -13,7 +13,10 @@ RGFW is a free multi-platform single-header very simple-to-use framework library
 
 
 The window backend supports XLib (UNIX), Cocoas (MacOS) and WinAPI (Windows)\
-The graphics backend supports OpenGL (./RGFW) and software rendering buffers (./RGFW-buffer).
+The graphics backend supports OpenGL and buffer rendering.\
+You can use `window_setGPURender` to toggle GPU rendering and `window_setCPURender` to toggle CPU rendering
+
+CPU rendering is turned off by default, see the `basic-buffer.odin` example
 
 RGFW was designed as a backend for RSGL, but it can be used standalone or for other libraries, such as Raylib which uses it as an optional alternative backend.
 
