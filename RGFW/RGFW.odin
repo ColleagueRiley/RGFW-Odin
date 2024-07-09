@@ -1,8 +1,27 @@
 package RGFW
 
-when ODIN_OS == .Windows do foreign import native "RGFW/libRGFW.dll"
-when ODIN_OS == .Darwin do foreign import native "RGFW/libRGFW.dylib"
-when (ODIN_OS == .Linux || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD) do foreign import native "RGFW/libRGFW.so"
+when ODIN_OS == .Windows {
+		foreign import native {
+			"RGFW.dll",
+			"system:user32.lib",
+			"system:gdi32.lib",
+			"system:shell32.lib",
+		}
+} else when ODIN_OS == .Darwin {
+    foreign import native { 
+        "RGFW.a",
+        "system:Cocoa.framework",
+        "system:IOKit.framework",
+        "system:OpenGL.framework",
+    }
+} else when (ODIN_OS == .Linux || ODIN_OS == .FreeBSD || ODIN_OS == .OpenBSD) {
+    foreign import native {
+        "RGFW.a",
+        "system:X11",
+        "system:Xrandr",
+        "system:GL"
+    }
+}
 
 import _c "core:c"
 
@@ -21,6 +40,7 @@ window_args :: enum(u16) {
     OPENGL_SOFTWARE = (1<<11), /*! use OpenGL software rendering */
     COCOA_MOVE_TO_RESOURCE_DIR = (1 << 12), /* (cocoa only), move to resource folder */
     SCALE_TO_MONITOR = (1 << 13), /* scale the window to the screen */
+    RGFW_NO_INIT_API = (1 << 2), /* DO not init an API (mostly for bindings, you should use `#define RGFW_NO_API` in C */
 
     NO_GPU_RENDER = (1<<14), /* don't render (using the GPU based API)*/
     NO_CPU_RENDER = (1<<15) /* don't render (using the CPU based buffer rendering)*/
@@ -133,7 +153,7 @@ area :: struct {
 }
 
 monitor :: struct {
-    name : [128]i8,  /* monitor name */
+    name : [128]byte,  /* monitor name */
     rect : rect, /* monitor Workarea */
     scaleX : f32,
     scaleY : f32, /* monitor content scale*/
@@ -141,7 +161,7 @@ monitor :: struct {
     physH : f32
 }
 
-Key :: enum u32 {
+Key :: enum u8 {
     KEY_NULL = 0,
     Escape,
     F1,
@@ -253,21 +273,22 @@ Key :: enum u32 {
 };
 
 Event :: struct {
-    keyName : [16]i8, /*!< key name of event */
+    keyName : [16]byte, /*!< key name of event */
     /*! drag and drop data */
     /* 260 max paths with a max length of 260 */
-    droppedFiles : [MAX_DROPS][MAX_PATH]i8,
+    droppedFiles : [MAX_DROPS][MAX_PATH]byte,
     droppedFilesCount : u32, /*!< house many files were dropped */
 
     type : event_codes, /*!< which event has been sent?*/
     point : vector, /*!< mouse x, y of event (or drop point) */
-    keyCode : Key,  /*!< keycode of event 	!!Keycodes defined at the bottom of the header file!! */
-
+    
     fps : u32, /*the current fps of the window [the fps is checked when events are checked]*/
     frameTime : u64, 
     frameTime2 : u64,
 
-    inFocus : u8,  /*if the window is in focus or not*/
+    keyCode : Key,  /*!< keycode of event 	!!Keycodes defined at the bottom of the header file!! */
+
+    inFocus : b8,  /*if the window is in focus or not*/
 
     lockState : lockStates,
 
@@ -280,7 +301,7 @@ Event :: struct {
     axis : [2]vector /* x, y of axises (-100 to 100) */
 }; /*!< Event structure for checking/getting events */
 
-window ::  struct {
+window :: struct {
     src : window_src,
     buffer : [^]u8, /* buffer for non-GPU systems (OSMesa, basic software rendering) */
     /* when rendering using BUFFER, the buffer is in the RGBA format */
@@ -293,7 +314,7 @@ window ::  struct {
     /*[the fps is capped when events are checked]*/
 }; /*!< Window structure for managing the window */
 
-mouseIcons :: enum u32  {
+mouseIcons :: enum u8  {
     MOUSE_NORMAL = 0,
     MOUSE_ARROW,
     MOUSE_IBEAM,
@@ -328,13 +349,13 @@ mouseNotifyfunc :: #type proc "c" (win : ^window, point : vector, status : u8)
 /* mousePosChanged, the window that the move happened on and the new point of the mouse  */
 mouseposfunc :: #type proc "c" (win : ^window, point : vector)
 /*  dnd, the window that had the drop, the drop data and the amount files dropped */
-dndfunc :: #type proc "c" (win : ^window, droppedFiles : [^]cstring, droppedFilesCount : u32)
+dndfunc :: #type proc "c" (win : ^window, droppedFiles : [MAX_DROPS][MAX_PATH]byte, droppedFilesCount : u32)
 /* dnd_init, the window, the point of the drop on the windows */
 dndInitfunc :: #type proc "c" (win : ^window, point : vector)
 /* indowRefresh, the window that needs to be refreshed */
 windowrefreshfunc :: #type proc "c" (win : ^window)
 /* keyPressed / RGFW_keyReleased, the window that got the event, the keycode, the string version, the state of mod keys, if it was a press (else it's a release) */
-keyfunc :: #type proc "c" (win : ^window, key : Key, keyName : [16]i8, lockState : u8, pressed : u8)
+keyfunc :: #type proc "c" (win : ^window, key : Key, keyName : [16]byte, lockState : u8, pressed : u8)
 /* mouseButtonPressed / mouseButtonReleased, the window that got the event, the button that was pressed, the scroll value, if it was a press (else it's a release)  */
 mousebuttonfunc :: #type proc "c" (win : ^window, button : u8, scroll : f64, pressed : u8)
 /* jsButtonPressed / sButtonReleased, the window that got the event, the button that was pressed, the scroll value, if it was a press (else it's a release) */
@@ -344,20 +365,25 @@ jsAxisfunc :: #type proc "c" (win : ^window, joystick : u16, axis : [2]vector, a
 
 @(default_calling_convention="c", link_prefix="RGFW_")
 foreign native {   
+    setBufferSize :: proc(size : area) ---
     @(link_name="RGFW_createWindow")
     createWindowSrc :: proc(string: cstring, rect: rect, args: window_args) -> ^window ---
     window_close :: proc(window: ^window) ---
     window_checkEvent ::  proc "c" (window: ^window) -> ^Event ---
-    getMonitors :: proc() -> [6]monitor ---
+    getMonitors :: proc() -> []monitor ---
     getPrimaryMonitor :: proc() -> monitor ---
     getScreenSize :: proc() -> area ---
     window_move :: proc(win: ^window, v: vector) ---
     window_moveToMonitor :: proc(win: ^window, m: monitor) ---
     window_resize :: proc(win: ^window, a: area) ---
     window_setMaxSize :: proc(win: ^window, a: area) ---
+    window_setMinSize :: proc(win: ^window, a : area) ---
     window_maximize :: proc(win: ^window) ---
     window_minimize :: proc(win: ^window) ---
     window_restore :: proc(win: ^window) ---
+	window_setBorder :: proc(win: ^window, border : b8) ---
+	window_setDND :: proc(win: ^window, allow : b8) ---
+    window_setMousePassthrough :: proc(win : ^window, passthrough : b8) ---
     window_setName :: proc(win: ^window, name: cstring) ---
     window_setIcon :: proc(win: ^window, icon: ^u8, a: area, channels: int) ---
     window_setMouse :: proc(win: ^window, image: [^]u8, a: area, channels: int) ---
@@ -381,21 +407,20 @@ foreign native {
     window_getMonitor :: proc(win: ^window) -> monitor ---
     window_makeCurrent :: proc(win: ^window) ---
     Error :: proc() -> bool ---
-    isPressedI :: proc(win: ^window, key: Key) -> b8 ---
-    wasPressedI :: proc(win: ^window, key: Key) -> bool ---
-    isHeldI :: proc(win: ^window, key: Key) -> bool ---
-    isReleasedI :: proc(win: ^window, key: Key) -> bool ---
+    isPressed :: proc(win: ^window, key: Key) -> b8 ---
+    wasPressed :: proc(win: ^window, key: Key) -> bool ---
+    isHeld :: proc(win: ^window, key: Key) -> bool ---
+    isReleased :: proc(win: ^window, key: Key) -> bool ---
+    isClicked :: proc(win: ^window, key: Key) -> bool ---
     isMousePressed :: proc(win: ^window, button: u8) -> bool ---
     isMouseHeld :: proc(win: ^window, button: u8) -> bool ---
     isMouseReleased :: proc(win: ^window, button: u8) -> bool ---
     wasMousePressed :: proc(win: ^window, button: u8) -> bool ---
     keyCodeTokeyStr :: proc(key: Key) -> cstring ---
     keyStrToKeyCode :: proc(key: cstring) -> u32 ---
-    isPressedS :: proc(win: ^window, key: cstring) -> bool ---
     readClipboard :: proc(size: ^u32) -> cstring ---
     clipboardFree :: proc(str: cstring)  ---
     writeClipboard :: proc(text: cstring, textLen: u32) ---
-    keystrToChar :: proc(key: cstring) -> i8 ---
     //createThread :: proc(ptr: threadFunc_ptr, args: rawptr) -> thread ---
     cancelThread :: proc(t: thread) ---
     joinThread :: proc(t: thread) ---
@@ -434,8 +459,8 @@ foreign native {
 	setjsAxisCallback :: proc(func : jsAxisfunc) ---
 }
 
-createWindow :: proc(string: cstring, rect: rect, args: window_args) -> ^window {
-    window := createWindowSrc(string, rect, args)
+createWindow :: proc(str: cstring, rect: rect, args: window_args) -> ^window {
+    window := createWindowSrc(str, rect, args)
     window_setCPURender(window, 0)
     return window
 }

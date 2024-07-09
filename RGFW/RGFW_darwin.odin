@@ -15,7 +15,7 @@ window_src :: struct {
 
     jsPressed : [4][16]u8, /* if a key is currently pressed or not (per joystick) */
 
-    joysticks[4] : i32, /* limit of 4 joysticks at a time */
+    joysticks[4] : i16, /* limit of 4 joysticks at a time */
     joystickCount : u16, /* the actual amount of joysticks */
 
     scale : area, /* window scaling */

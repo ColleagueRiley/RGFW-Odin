@@ -7,6 +7,7 @@ window_src :: struct {
     rSurf : rawptr, /*!< source graphics context (GLXContext) */
 
     bitmap : ^x11.XImage,
+    gc : x11.GC,
 
     jsPressed : [4][16]u8, /* if a key is currently pressed or not (per joystick) */
 
