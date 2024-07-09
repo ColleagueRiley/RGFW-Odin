@@ -60,7 +60,7 @@ RGFW/RGFW.o:
 RGFW/libRGFW$(LIB_EXT):
 	make RGFW/RGFW.o
 	$(AR) rcs RGFW.a RGFW/RGFW.o
-	mv RGFW.a RGFW/RGFW.$(LIB_EXT)
+	mv RGFW.a RGFW/RGFW$(LIB_EXT)
 
 clean:
 	rm -f RGFW/RGFW.o RGFW/libRGFW$(LIB_EXT)
