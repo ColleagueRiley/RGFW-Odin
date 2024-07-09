@@ -9,12 +9,14 @@ running := true
 icon := []u8{0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF};
 
 gotMsg := false
-keyfunc ::  proc "c" (win : ^RGFW.window, key : RGFW.Key, keyName : [16]i8, lockState : u8, pressed : u8) {
+keyfunc ::  proc "c" (win : ^RGFW.window, key : RGFW.Key, keyName : [16]byte, lockState : u8, pressed : u8) {
     gotMsg = true // because you can't call odin functions from C-odin functions
 }
 
 main :: proc() {  
     win := RGFW.createWindow("RGFW Example Window", {500, 500, 500, 500}, .ALLOW_DND | .CENTER);
+   
+    
     RGFW.window_makeCurrent(win);
 
     RGFW.setKeyCallback(keyfunc)
@@ -26,7 +28,7 @@ main :: proc() {
 
     gl.ClearColor(0, 0, 0, 0);
 
-    for (running && RGFW.isPressedI(win, .Escape) == false) {   
+    for (running && RGFW.isPressed(win, .Escape) == false) {   
         if (gotMsg) {
             fmt.printf("got message from callback\n")
             gotMsg = false
@@ -43,24 +45,24 @@ main :: proc() {
                 running = false;  
                 break;
             }
-            if (RGFW.isPressedI(win, .Up)) {
+            if (RGFW.isPressed(win, .Up)) {
                 str := RGFW.readClipboard(nil);
                 fmt.printf("Pasted : %s\n", str);
                 RGFW.clipboardFree(str);
             }
-            else if (RGFW.isPressedI(win, .Down)) {
+            else if (RGFW.isPressed(win, .Down)) {
                 RGFW.writeClipboard("DOWN", 4);
             }
-            else if (RGFW.isPressedI(win, .Space)) {
+            else if (RGFW.isPressed(win, .Space)) {
                 fmt.printf("fps : %i\n", win.event.fps);
             }
-            else if (RGFW.isPressedI(win, .w)) {
+            else if (RGFW.isPressed(win, .w)) {
                 RGFW.window_setMouseDefault(win);
             }
-            else if (RGFW.isPressedI(win, .q)) {
+            else if (RGFW.isPressed(win, .q)) {
                 RGFW.window_showMouse(win, 0);
             }
-            else if (RGFW.isPressedI(win, .t)) {
+            else if (RGFW.isPressed(win, .t)) {
                 RGFW.window_setMouse(win, raw_data(icon), {3, 3}, 4);
             }   
 
