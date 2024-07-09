@@ -6,6 +6,8 @@ when ODIN_OS == .Windows {
 			"system:user32.lib",
 			"system:gdi32.lib",
 			"system:shell32.lib",
+            "system:opengl32.lib",
+            "system:winmm.lib",
 		}
 } else when ODIN_OS == .Darwin {
     foreign import native { 
