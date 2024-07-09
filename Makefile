@@ -26,11 +26,11 @@ ifeq ($(detected_OS),Windows)
 endif
 ifeq ($(detected_OS),Darwin)        # Mac OS X
 	LIBS := -lm -framework Foundation -framework AppKit -framework OpenGL -framework CoreVideo -w
-	LIB_EXT = .dylib
+	LIB_EXT = .a
 endif
 ifeq ($(detected_OS),Linux)
     LIBS := -lXrandr -lX11 -lm -lGL
-	LIB_EXT = .so
+	LIB_EXT = .a
 endif
 
 all:
@@ -40,9 +40,6 @@ all:
 
 build-RGFW:
 	make RGFW/libRGFW$(LIB_EXT)		
-
-clean:
-	rm -f libRGFW.so libRGFW.dll libRGFW.dylib RGFW.o
 
 debug:
 	make clean
@@ -57,16 +54,13 @@ Odin/odin:
 	make Odin
 	cd Odin && make
 
-RGFW/RGFW.h:
-	curl -o RGFW/RGFW.h https://raw.githubusercontent.com/ColleagueRiley/RGFW/main/RGFW.h
-
 RGFW/RGFW.o:
-	make RGFW/RGFW.h
-	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW/RGFW.h -D RGFW_OPENGL -D RGFW_BUFFER -D RGFW_IMPLEMENTATION -D RGFW_NO_JOYSTICK_CODES -fPIC -o RGFW/RGFW.o
+	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW/RGFW.h -D RGFW_OPENGL -D RGFW_BUFFER -D RGFW_IMPLEMENTATION -fPIC -o RGFW/RGFW.o
 
 RGFW/libRGFW$(LIB_EXT):
 	make RGFW/RGFW.o
-	$(CC) $(CUSTOM_CFLAGS) -shared RGFW/RGFW.o $(LIBS) -o RGFW/libRGFW$(LIB_EXT)
+	$(AR) rcs RGFW.a RGFW/RGFW.o
+	mv RGFW.a RGFW/RGFW.$(LIB_EXT)
 
 clean:
-	rm -f RGFW/RGFW.h RGFW/RGFW.o RGFW/libRGFW$(LIB_EXT)
+	rm -f RGFW/RGFW.o RGFW/libRGFW$(LIB_EXT)
