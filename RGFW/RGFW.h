@@ -80,6 +80,14 @@
 		AICDG (@THISISAGOODNAME) -> vulkan support (example)
 */
 
+#if _MSC_VER
+#pragma comment(lib, "gdi32")
+#pragma comment(lib, "shell32")
+#pragma comment(lib, "opengl32")
+#pragma comment(lib, "winmm")
+#pragma comment(lib, "user32")
+#endif
+
 #ifndef RGFW_MALLOC
 #include <stdlib.h>
 #include <time.h>
@@ -1535,6 +1543,11 @@ RGFW_window* RGFW_root = NULL;
 */
 
 #if defined(RGFW_OPENGL) || defined(RGFW_EGL) || defined(RGFW_OSMESA)
+#ifdef RGFW_WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #ifndef __APPLE__
 #include <GL/gl.h>
 #else
@@ -3548,6 +3561,8 @@ Start of Linux / Unix defines
 */
 
 #ifdef RGFW_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	
 	#include <processthreadsapi.h>
 	#include <wchar.h>
 	#include <locale.h>
