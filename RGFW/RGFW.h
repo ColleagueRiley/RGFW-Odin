@@ -111,16 +111,29 @@
 #endif
 
 #ifndef RGFWDEF
-#ifdef __APPLE__
+#ifdef _WIN32
+#ifdef _MSC_VER
+#ifdef RGFW_EXPORT
+#define RGFWDEF __declspec(dllexport) inline
+#else
+#define RGFWDEF __declspec(dllimport) inline
+#endif
+#else
+#define RGFWDEF inline
+#endif
+#elif defined(__APPLE__)
 #define RGFWDEF static inline
 #else
 #define RGFWDEF inline
 #endif
 #endif
 
+
 #ifndef RGFW_ENUM
 #define RGFW_ENUM(type, name) type name; enum
 #endif
+
+
 
 #ifndef RGFW_UNUSED
 #define RGFW_UNUSED(x) (void)(x);
