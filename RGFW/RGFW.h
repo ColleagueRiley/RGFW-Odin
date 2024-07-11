@@ -111,16 +111,12 @@
 #endif
 
 #ifndef RGFWDEF
-#ifdef RGFW_EXPORT
-#ifdef _MSC_VER
-#ifdef _WIN32
-	#define RGFWDEF __declspec(dllexport) inline
-#else
-	#define RGFWDEF __declspec(dllimport) inline
-#endif
-#endif
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 #define RGFWDEF static inline
+#elif defined RGFW_EXPORT
+	#define RGFWDEF __declspec(dllexport) inline
+#elif defined _MSC_VER
+	#define RGFWDEF __declspec(dllimport) inline
 #else
 #define RGFWDEF inline
 #endif
