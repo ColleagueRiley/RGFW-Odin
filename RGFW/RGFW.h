@@ -118,8 +118,6 @@
 #else
 #define RGFWDEF __declspec(dllimport) inline
 #endif
-#else
-#define RGFWDEF inline
 #endif
 #elif defined(__APPLE__)
 #define RGFWDEF static inline
