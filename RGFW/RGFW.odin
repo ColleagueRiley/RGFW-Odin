@@ -2,7 +2,7 @@ package RGFW
 
 when ODIN_OS == .Windows {
 		foreign import native {
-			"RGFW.dll",
+			"RGFW.lib",
 			"system:user32.lib",
 			"system:gdi32.lib",
 			"system:shell32.lib",

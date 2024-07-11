@@ -33,13 +33,19 @@ ifeq ($(detected_OS),Linux)
 	LIB_EXT = .a
 endif
 
+
 all:
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) build basic.odin -file
 	$(ODIN) build basic-buffer.odin -file
 
 build-RGFW:
-	make RGFW/libRGFW$(LIB_EXT)		
+ifeq ($(detected_OS),Windows)
+	make RGFW/libRGFW$(LIB_EXT)	
+	@call build-cl.bat
+else
+	make RGFW/libRGFW$(LIB_EXT)	
+endif
 
 debug:
 	make clean
@@ -64,3 +70,4 @@ RGFW/libRGFW$(LIB_EXT):
 
 clean:
 	rm -f RGFW/RGFW.o RGFW/libRGFW$(LIB_EXT)
+	rm -f RGFW/RGFW.lib RGFW/RGFW.obj
