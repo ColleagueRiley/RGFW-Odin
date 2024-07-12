@@ -1,9 +1,9 @@
 package RGFW
 
 when ODIN_OS == .Windows {
-    @(extra_linker_flags="/NODEFAULTLIB:" + "msvcrt")
+    @(extra_linker_flags="/NODEFAULTLIB:msvcrt")
 		foreign import native {
-			"RGFW.lib",
+			"lib/rgfw_msvc.lib",
 			"system:user32.lib",
 			"system:gdi32.lib",
 			"system:shell32.lib",
