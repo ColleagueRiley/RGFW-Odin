@@ -30,6 +30,7 @@ if defined vs_path (
 
 :compile
 pushd rgfw
-cl -nologo -TC -c rgfw.c -wd4005
+cl -nologo -MT -TC -c -O2 rgfw.c
 lib -nologo rgfw.obj -out:RGFW.lib
+del *.obj
 popd
