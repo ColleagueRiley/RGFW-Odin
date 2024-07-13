@@ -45,7 +45,7 @@ build-RGFW:
 debug:
 ifeq ($(detected_OS),Windows)
 	make clean
-	@call build-libs.bat
+	.\build-libs.bat
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
 	$(ODIN) run basic-buffer.odin -file
@@ -61,7 +61,7 @@ RGFW/RGFW.o:
 
 RGFW/libRGFW$(LIB_EXT):
 ifeq ($(detected_OS),Windows)
-	@call build-libs.bat
+	.\build-libs.bat
 else
 	make RGFW/RGFW.o
 endif
