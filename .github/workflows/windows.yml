@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        compiler: [mingw-w64]
+        compiler: [MSVC]
         bits: [64]
 
     env:
@@ -53,17 +53,15 @@ jobs:
         cd ${{ env.RELEASE_NAME }}
         cd ../../../RGFW-Odin
 
-    - name: Build Library (MinGW-w64 64bit)
+    - name: Build Library (MSVC 64bit)
       run: |
         ${{ matrix.ARCH }}-w64-mingw32-gcc.exe --version
         windres.exe --version
-        dir C:\msys64\mingw64\bin
-        make build-RGFW
-       # make Odin/odin
-       # make ODIN=./Odin/odin.exe
+        build-libs.bat
+      
       shell: cmd
       if: |
-        matrix.compiler == 'mingw-w64' &&
+        matrix.compiler == 'MSVC' &&
         matrix.bits == 64
         
     - name: Generate Artifacts
