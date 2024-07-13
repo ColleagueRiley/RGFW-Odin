@@ -64,7 +64,7 @@ ifeq ($(detected_OS),Windows)
 	.\build-libs.bat
 else
 	make RGFW/RGFW.o
-	$(AR) rcs libRGFW.a *.o
+	$(AR) rcs libRGFW.a RGFW/RGFW.o
 	mv libRGFW.a RGFW/RGFW.a
 endif
 
