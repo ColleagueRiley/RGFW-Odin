@@ -4,11 +4,11 @@ ODIN = odin
 CUSTOM_CFLAGS = 
 
 LIBS := -w -lgdi32 -lm -lopengl32 -lwinmm -ggdb 
-LIB_EXT = .dll
+LIB_EXT = .lib
 
 ifneq (,$(filter $(CC),winegcc x86_64-w64-mingw32-gcc))
     detected_OS := Windows
-	LIB_EXT = .dll
+	LIB_EXT = .lib
 else
 	ifeq '$(findstring ;,$(PATH))' ';'
 		detected_OS := Windows
@@ -40,12 +40,7 @@ all:
 	$(ODIN) build basic-buffer.odin -file
 
 build-RGFW:
-ifeq ($(detected_OS),Windows)
 	make RGFW/libRGFW$(LIB_EXT)	
-	@call build-libs.bat
-else
-	make RGFW/libRGFW$(LIB_EXT)	
-endif
 
 debug:
 ifeq ($(detected_OS),Windows)
@@ -61,20 +56,15 @@ else
 	$(ODIN) run basic-buffer.odin -file
 endif
 
-Odin:
-	git clone https://github.com/odin-lang/Odin
-
-Odin/odin:
-	make Odin
-	cd Odin && make
-
 RGFW/RGFW.o:
 	$(CC) $(CUSTOM_CFLAGS) -x c -c RGFW/RGFW.h -D RGFW_OPENGL -D RGFW_BUFFER -D RGFW_IMPLEMENTATION -fPIC -o RGFW/RGFW.o
 
 RGFW/libRGFW$(LIB_EXT):
+ifeq ($(detected_OS),Windows)
+	@call build-libs.bat
+else
 	make RGFW/RGFW.o
-	$(AR) rcs RGFW.a RGFW/RGFW.o
-	mv RGFW.a RGFW/RGFW$(LIB_EXT)
+endif
 
 clean:
 	rm -f RGFW/RGFW.o RGFW/libRGFW$(LIB_EXT)
