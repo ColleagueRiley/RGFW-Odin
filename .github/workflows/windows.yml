@@ -36,7 +36,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@master microsoft/setup-msbuild@v2
     
     - name: Setup Release Version
       run: |
@@ -45,7 +45,6 @@ jobs:
       if: github.event_name == 'release' && github.event.action == 'published'
 
     - name: Setup Environment
-      uses: microsoft/setup-msbuild@v2
       run: | 
         dir
         mkdir build
