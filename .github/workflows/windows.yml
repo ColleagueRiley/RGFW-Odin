@@ -36,7 +36,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@master microsoft/setup-msbuild@v2
+      uses: actions/checkout@master 
+      
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v2
     
     - name: Setup Release Version
       run: |
