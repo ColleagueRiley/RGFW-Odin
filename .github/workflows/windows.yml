@@ -37,9 +37,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master 
-      
-    - name: Setup MSVC
-      uses: microsoft/setup-msbuild@v2
     
     - name: Setup Release Version
       run: |
@@ -57,6 +54,7 @@ jobs:
         cd ../../../RGFW-Odin
 
     - name: Build Library (MSVC 64bit)
+      uses: microsoft/setup-msbuild@v2
       run: |
         build-libs.bat
       
