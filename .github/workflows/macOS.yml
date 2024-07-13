@@ -55,12 +55,12 @@ jobs:
         brew install grep
         
         # Build RGFW x86_64 dynamic
-        make RGFW/libRGFW.a CUSTOM_CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
-        mv RGFW/libRGFW.a RGFW/libRGFW.a
+        make RGFW/RGFW.a CUSTOM_CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
+        mv RGFW/RGFW.a RGFW/RGFW.a
 
         # Build RGFW arm64 dynamic
-        make RGFW/libRGFW.a CUSTOM_CFLAGS="-target arm64-apple-macos11 -DGL_SILENCE_DEPRECATION"
-        mv RGFW/libRGFW.a /tmp/libRGFW_arm64.a
+        make RGFW/RGFW.a CUSTOM_CFLAGS="-target arm64-apple-macos11 -DGL_SILENCE_DEPRECATION"
+        mv RGFW/RGFW.a /tmp/libRGFW_arm64.a
         
       #  make Odin/odin
       #  make ODIN=Odin/odin

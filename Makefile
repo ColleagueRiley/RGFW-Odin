@@ -35,23 +35,23 @@ endif
 
 
 all:
-	make RGFW/libRGFW$(LIB_EXT)
+	make RGFW/RGFW$(LIB_EXT)
 	$(ODIN) build basic.odin -file
 	$(ODIN) build basic-buffer.odin -file
 
 build-RGFW:
-	make RGFW/libRGFW$(LIB_EXT)	
+	make RGFW/RGFW$(LIB_EXT)	
 
 debug:
 ifeq ($(detected_OS),Windows)
 	make clean
 	.\build-libs.bat
-	make RGFW/libRGFW$(LIB_EXT)
+	make RGFW/RGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
 	$(ODIN) run basic-buffer.odin -file
 else
 	make clean
-	make RGFW/libRGFW$(LIB_EXT)
+	make RGFW/RGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
 	$(ODIN) run basic-buffer.odin -file
 endif
@@ -59,13 +59,13 @@ endif
 RGFW/RGFW.o:
 	$(CC) $(CUSTOM_CFLAGS) RGFW/RGFW.c -c $(LIBS) -fPIC -o RGFW/RGFW.o
 
-RGFW/libRGFW$(LIB_EXT):
+RGFW/RGFW$(LIB_EXT):
 ifeq ($(detected_OS),Windows)
 	.\build-libs.bat
 else
 	make RGFW/RGFW.o
-	$(AR) rcs libRGFW.a RGFW/RGFW.o
-	mv libRGFW.a RGFW/RGFW.a
+	$(AR) rcs RGFW.a RGFW/RGFW.o
+	mv RGFW.a RGFW/RGFW.a
 endif
 
 clean:
