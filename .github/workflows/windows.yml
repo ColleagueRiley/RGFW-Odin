@@ -54,9 +54,10 @@ jobs:
         cd ../../../RGFW-Odin
 
     - name: Build Library (MSVC 64bit)
-      uses: microsoft/setup-msbuild@v2
       run: |
         build-libs.bat
+
+      uses: microsoft/setup-msbuild@v2
       
       shell: cmd
       if: |
