@@ -58,6 +58,7 @@ jobs:
 
     - name: Build app for release
       run: |
+        cl -nologo -MT -TC -c -O2 rgfw.c
         build-libs.bat
       
       shell: cmd
