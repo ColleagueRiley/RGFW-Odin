@@ -53,11 +53,12 @@ jobs:
         cd ${{ env.RELEASE_NAME }}
         cd ../../../RGFW-Odin
 
-    - name: Build Library (MSVC 64bit)
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build app for release
       run: |
         build-libs.bat
-
-      uses: microsoft/setup-msbuild@v2
       
       shell: cmd
       if: |
