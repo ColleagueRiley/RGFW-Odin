@@ -30,6 +30,11 @@ if defined vs_path (
 
 :compile
 pushd rgfw
-cl -nologo -TC -c rgfw.c -wd4005
-lib -nologo rgfw.obj -out:RGFW.lib
+if not exist lib mkdir lib
+echo Building libraries to RGFW/lib folder
+cl -nologo -MT -TC -c -O2 rgfw.c
+lib -nologo rgfw.obj -out:lib/rgfw_msvc.lib
+clang -c rgfw.c -std=c99 -o rgfw_clang.obj -O2 -Wno-deprecated-declarations
+llvm-lib rgfw_clang.obj -out:lib/rgfw_clang.lib
+del *.obj
 popd

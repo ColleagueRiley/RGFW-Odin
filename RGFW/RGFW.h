@@ -113,10 +113,8 @@
 #ifndef RGFWDEF
 #if defined(__APPLE__)
 #define RGFWDEF static inline
-#elif defined RGFW_EXPORT
-	#define RGFWDEF __declspec(dllexport) inline
-#elif defined _MSC_VER
-	#define RGFWDEF __declspec(dllimport) inline
+#elif defined _WIN32
+#define RGFWDEF 
 #else
 #define RGFWDEF inline
 #endif
@@ -3568,16 +3566,18 @@ Start of Linux / Unix defines
 */
 
 #ifdef RGFW_WINDOWS
-	#define WIN32_LEAN_AND_MEAN
-	
-	#include <processthreadsapi.h>
-	#include <wchar.h>
-	#include <locale.h>
-	#include <windowsx.h>
-	#include <shellapi.h>
-	#include <shellscalingapi.h>
-	#include <windows.h>
-	#include <winuser.rh>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#pragma warning(push)
+#pragma warning(disable: 4005) // Some macro redefinition warnings. RT_MANIFEST etc.
+#include <winuser.rh>
+#pragma warning(pop)
+#include <locale.h>
+#include <processthreadsapi.h> // Are these in use?
+#include <wchar.h>             // ?
+#include <windowsx.h>
+#include <shellapi.h>
+#include <shellscalingapi.h>
 
 	#ifndef RGFW_NO_XINPUT
 	typedef DWORD (WINAPI * PFN_XInputGetState)(DWORD,XINPUT_STATE*);

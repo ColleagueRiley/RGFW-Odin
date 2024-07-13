@@ -42,16 +42,24 @@ all:
 build-RGFW:
 ifeq ($(detected_OS),Windows)
 	make RGFW/libRGFW$(LIB_EXT)	
-	@call build-cl.bat
+	@call build-libs.bat
 else
 	make RGFW/libRGFW$(LIB_EXT)	
 endif
 
 debug:
+ifeq ($(detected_OS),Windows)
+	make clean
+	@call build-libs.bat
+	make RGFW/libRGFW$(LIB_EXT)
+	$(ODIN) run basic.odin -file
+	$(ODIN) run basic-buffer.odin -file
+else
 	make clean
 	make RGFW/libRGFW$(LIB_EXT)
 	$(ODIN) run basic.odin -file
 	$(ODIN) run basic-buffer.odin -file
+endif
 
 Odin:
 	git clone https://github.com/odin-lang/Odin
