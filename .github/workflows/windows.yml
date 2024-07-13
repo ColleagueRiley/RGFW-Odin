@@ -55,8 +55,6 @@ jobs:
 
     - name: Build Library (MSVC 64bit)
       run: |
-        ${{ matrix.ARCH }}-w64-mingw32-gcc.exe --version
-        windres.exe --version
         build-libs.bat
       
       shell: cmd
