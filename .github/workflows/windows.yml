@@ -45,6 +45,7 @@ jobs:
       if: github.event_name == 'release' && github.event.action == 'published'
 
     - name: Setup Environment
+      uses: microsoft/setup-msbuild@v2
       run: | 
         dir
         mkdir build

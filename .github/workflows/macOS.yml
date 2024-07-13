@@ -38,7 +38,6 @@ jobs:
       if: github.event_name == 'release' && github.event.action == 'published'
 
     - name: Setup Environment
-      uses: microsoft/setup-msbuild@v2
       run: | 
         mkdir build
         cd build
@@ -49,7 +48,6 @@ jobs:
     # Generating static + shared library, note that i386 architecture is deprecated
     # Defining GL_SILENCE_DEPRECATION because OpenGL is deprecated on macOS
     - name: Build Library
-      uses: microsoft/setup-msbuild@v2
       run: |
         clang --version
         
