@@ -313,8 +313,10 @@ window :: struct {
 
     r : rect, /* the x, y, w and h of the struct */
 
-    fpsCap : u32 /*!< the fps cap of the window should run at (change this var to change the fps cap, 0 :: no limit)*/
+    fpsCap : u32, /*!< the fps cap of the window should run at (change this var to change the fps cap, 0 :: no limit)*/
     /*[the fps is capped when events are checked]*/
+
+    _winArgs : u32 /* windows args (for RGFW to check) */
 }; /*!< Window structure for managing the window */
 
 mouseIcons :: enum u8  {
